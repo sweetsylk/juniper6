@@ -1,38 +1,41 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-
+<div class="container my-5">
     <!--top bar container-->
     <div class="text-center mb-4">
-        <h1>Lasagna</h1>
-        <p>
-            by <span>User's name</span> 4.5/5 (100 reviews)
+        <h1 class="fw-bold">Lasagna</h1>
+        <p class="text-muted mb-1">
+            by <span class="fw-semibold">User's name</span> 4.5/5 (100 reviews)
         </p>
     </div>
 
     <!-- Image description of Recipe-->
     <div class="text-center mb-4">
         <p>Description of the dish</p>
-        <img src="image-of-food.jpg" alt="image of recipe">
+        <img src="image-of-food.jpg" alt="image of recipe" class="img-fluid rounded shadow"
+            style="max-height: 400px; max-width: 800px; object-fit: cover;">
     </div>
 
     <!-- Recipe Info (Time, Servings, Yield)-->
     <div class="row justify-content-center text-center mb-4 g-3">
-        <div>
-            <h5>Prep Time</h5>
-            <p>30 minutes</p>
-        </div>
-        <div>
-            <h5>Cook Time</h5>
-            <p>60 minutes</p>
-        </div>
-        <div>
-            <h5>Total Time</h5>
-            <p>60 minutes</p>
-        </div>
-        <div>
-            <h5>Servings</h5>
-            <p>6</p>
+        <div class="col-6 col-md-3">
+
+            <div class="border rounded p-3 shadow-sm bg-light">
+                <h5 class="text-muted mb-1">Prep Time</h5>
+                <p class="fw-semibold mb-0">30 minutes</p>
+            </div>
+            <div class="border rounded p-3 shadow-sm bg-light">
+                <h5 class="text-muted mb-1">Cook Time</h5>
+                <p class="fw-semibold mb-0">60 minutes</p>
+            </div>
+            <div class="border rounded p-3 shadow-sm bg-light">
+                <h5 class="text-muted mb-1">Total Time</h5>
+                <p class="fw-semibold mb-0">60 minutes</p>
+            </div>
+            <div class="border rounded p-3 shadow-sm bg-light">
+                <h5 class="text-muted mb-1">Servings</h5>
+                <p class="fw-semibold mb-0">6</p>
+            </div>
         </div>
     </div>
 
@@ -41,26 +44,31 @@
 
         <!-- Ingredients-->
         <div class="col-12 col-lg-4">
-            <h3>Ingredients</h3>
-            <ul>
-                <li>Pasta sheets</li>
-                <li>Tomato sauce</li>
-                <li>Mince meat</li>
-            </ul>
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Ingredients</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li>Pasta sheets</li>
+                        <li>Tomato sauce</li>
+                        <li>Mince meat</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <!-- Directions-->
         <div class="col-12 col-lg-8">
-            <div>
-                <h3>Directions</h3>
-                <ol>
-                    <li>Boil pasta sheets</li>
-                    <li>Tomato sauce</li>
-                    <li>Mince meat</li>
-                </ol>
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Directions</h3>
+                    <ol class="list-group list-group-numbered list-group-flush">
+                        <li class="list-group-item">Boil pasta sheets</li>
+                        <li class="list-group-item">Tomato sauce</li>
+                        <li class="list-group-item">Mince meat</li>
+                    </ol>
+                </div>
             </div>
         </div>
-
 
     </div>
 
