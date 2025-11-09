@@ -944,7 +944,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
+# ignore the images uploaded
+/media/
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
