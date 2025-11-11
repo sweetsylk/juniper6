@@ -1,18 +1,11 @@
 {% extends 'base.html' %}
 {% block body %}
-{% load static %} <!-- so I can load photo- find better (?) method later-->
+  {% include 'partials/navbar.html' %}
+  {% include 'partials/messages.html' %}
+  {% block content %}
+  {% load static %} <!-- so I can load photo- find better (?) method later-->
 
-<!--create partial for this page-->
-
-  <div class="container vh-100">
-    
-    <nav class="navbar navbar-light bg-light pt-3">
-      <a class="navbar-brand" href="#">
-        <img src="..." width="30" height="30" class="d-inline-block align-top" alt="">
-        RECIPIFY
-      </a>
-    </nav>
-
+    <!--create partial for this page-->  
     <div class="pt-3"> 
       <div class="card mb-3">
         <img src="{% static 'recipes/images/food.png' %}" class="card-img-top" alt="...">
@@ -74,5 +67,14 @@
       </div>
     </div>
 
-  </div>
-{% endblock %}
+
+    <!--For items in recipies table, {% include partial that makes a card
+    displaying recipe photo, name, and creator 
+    could make it a doomscroll using this but computationally would it suck ass?
+    would prob do 1-50, then have option to click for more
+
+    how would this be affected by filtering?
+    Just, for items in 'acceptable options'%}-->
+    
+  {% endblock %}
+{% endblock %} 
