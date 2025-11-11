@@ -1,4 +1,4 @@
-# Team Juniper6 Small Group project
+# Juniper6 - Small Group Project
 
 ## Team members
 The members of the team are:
