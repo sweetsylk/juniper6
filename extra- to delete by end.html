@@ -1,0 +1,84 @@
+<div class="row h-100">
+
+      <!--<div class="col-auto bg-dark"></div>-->
+      <!-- ^What will be the navbar colum!-->
+      <!--col-auto will make it automatically stretch to fit size of it's contents-->
+
+      <div class="col bg-light">
+        <div class="card rounded-card">
+          <img src="{% static 'recipes/images/wings.png' %}" class="card-img-top" alt="wings">
+          <div class="card-body">
+            <h5 class="card-title">Recipe name</h5>
+            <p class="card-text">Creator's description of recipe</p>
+            <p class="card-text"><small class="text-muted">Tags</small></p>
+            <a href="#" class="btn btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col bg-light">
+        <div class="card">
+          <img src="{% static 'recipes/images/cookies.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Recipe name</h5>
+            <p class="card-text">Creator's description of recipe</p>
+            <p class="card-text"><small class="text-muted">Tags</small></p>
+            <a href="#" class="btn btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col bg-light">
+        <div class="card">
+          <img src="{% static 'recipes/images/milkshake.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Recipe name</h5>
+            <p class="card-text">Creator's description of recipe</p>
+            <p class="card-text"><small class="text-muted">Tags</small></p>
+            <a href="#" class="btn btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col bg-light">
+        <div class="card">
+          <img src="{% static 'recipes/images/salad.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Recipe name</h5>
+            <p class="card-text">Creator's description of recipe</p>
+            <p class="card-text"><small class="text-muted">Tags</small></p>
+            <a href="#" class="btn btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col bg-light">
+       <div class="card">
+          <img src="{% static 'recipes/images/salad.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Recipe name</h5>
+            <p class="card-text">Creator's description of recipe</p>
+            <p class="card-text"><small class="text-muted">Tags</small></p>
+            <a href="#" class="btn btn-primary">View</a>
+          </div>
+        </div>
+      </div>
+
+       <!--{% for i in 5|make_list%} display newest 25 recipes by default
+        {% include recipe_cards.html with recipe=recipeID %}
+        find newest ID by checking table
+        recipeID wld be logical- if most recent ID=100, then 2nd most recent=99, etc
+        so, can determine which 25 IDs to pass in by making recipeID variable and
+        -1 from it at end of every iteration
+      {%endfor%}-->
+
+    </div>¡
+
+
+        <footer class="footer">
+      <div class="container">
+        <span class="text-muted">Place sticky footer content here.</span>
+      </div>
+    </footer>
+
+    style="background-color: #b0b0b0;"

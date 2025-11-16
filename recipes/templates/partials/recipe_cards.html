@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} <!-- so I can load photo-->
 
 <div class="col">
   <div class="card rounded-card">
@@ -15,10 +15,10 @@
   </div>
 </div>
 
-      <!--{% for i in 5|make_list%} display newest 25 recipes by default
+        {% for i in repeat_times %} <!--display newest 25 recipes by default-->
         {% include recipe_cards.html with recipe=recipeID %}
-        find newest ID by checking table
+        <!--find newest ID by checking table- 
         recipeID wld be logical- if most recent ID=100, then 2nd most recent=99, etc
-        so, can determine which 25 IDs to pass in by making recipeID variable and
-        -1 from it at end of every iteration
+        so, can determine which IDs to pass in by making recipeID variable and
+        -1 from it at end of every iteration. would need this car to be globally availible tho!-->
       {%endfor%}-->

@@ -3,7 +3,7 @@
   {% include 'partials/navbar.html' %}
   {% include 'partials/messages.html' %}
   {% block content %}
-  {% load static %} <!-- so I can load photo-->
+  {% load static %}
 
   <!--<div class="d-flex">
     <div class="container bg-dark">
@@ -18,19 +18,29 @@
 
     <div class="row row-cols-3 row-cols-md-5 g-4">
 
-      {% for i in repeat_times%}
+      {% for i in repeat_times%} <!--display newest 25 recipes by default-->
         {%include "partials/test_card.html"%}
       {%endfor%}
       
-
-
     </div>
 
-    <footer class="footer">
-      <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+    <footer class="text-center text-white mt-4 footer-colour">
+      <!-- Grid container -->
+      <div class="container p-4 pb-1">
+        <!-- Section: CTA -->
+        <section class="">
+          <p class="d-flex justify-content-center align-items-center">
+            <span class="me-3">Showing recipes x - y</span> <!--need index var tbat say how many we're showing-->
+            <button type="button" class="btn btn-outline-light btn-rounded">
+              Show more!
+            </button>
+          </p>
+        </section>
+        <!-- Section: CTA -->
       </div>
+      <!-- Grid container -->
     </footer>
+
 
   </div>
 
