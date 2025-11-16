@@ -1,10 +1,24 @@
+{% load static %}
+
 <div class="col">
   <div class="card rounded-card">
-    <img src="{% static 'recipes/images/salad.png' %}" class="card-img-top rounded-top-image" alt="...">
+    <img src="{{recipe.image}}" class="card-img-top rounded-top-image" alt="...">
     <div class="card-body">
-      <h5 class="card-title"><a class="link dark-link" href="#">Card title</a></h5>
-      <p class="card-text">Description of recipe</p>
-      <p class="card-text"><small class="text-muted">Tags</small></p>
+      <h5 class="card-title"><a class="link dark-link" href="#">{{recipe.title}}</a></h5>
+      <h7 class="card-title"><a class="link user-link-style" href="#">{{recipe.creator}}</a></h7>
+      <p class="card-text">{{recipe.description}}</p>
+      <p class="card-text"><small class="text-muted">{{recipe.tags}}</small></p>
+      <!--want tags to 'roll off' card with a ...  if too many to fit. Maybe same with description, 
+      or impose character limit. Each tag would also be a link to page of all recipes with that tag
+      could maybe even add a follow/favourite tag functionality-->
     </div>
   </div>
 </div>
+
+      <!--{% for i in 5|make_list%} display newest 25 recipes by default
+        {% include recipe_cards.html with recipe=recipeID %}
+        find newest ID by checking table
+        recipeID wld be logical- if most recent ID=100, then 2nd most recent=99, etc
+        so, can determine which 25 IDs to pass in by making recipeID variable and
+        -1 from it at end of every iteration
+      {%endfor%}-->

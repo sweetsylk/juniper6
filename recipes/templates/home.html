@@ -3,10 +3,7 @@
   {% include 'partials/navbar.html' %}
   {% include 'partials/messages.html' %}
   {% block content %}
-  {% load static %} <!-- so I can load photo- find better (?) method later-->
-
-    <!--create partial for this page-->  
-
+  {% load static %} <!-- so I can load photo-->
 
   <!--<div class="d-flex">
     <div class="container bg-dark">
@@ -20,13 +17,20 @@
   <div class="container-fluid">
 
     <div class="row row-cols-3 row-cols-md-5 g-4">
-      index = 0
-      while i < index+=25
-      find recipe name + description + photo + tags + user name from table with primark key i
-      {% include "recipe_cards.html" %} + fill with data
 
+      {% for i in repeat_times%}
+        {%include "partials/test_card.html"%}
+      {%endfor%}
       
+
+
     </div>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">Place sticky footer content here.</span>
+      </div>
+    </footer>
 
   </div>
 

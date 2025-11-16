@@ -6,5 +6,9 @@ from django.shortcuts import render
 #@login_prohibited
 def home(request):
     """Display the application's start/home screen."""
+    context = {
+    'repeat_times': range(25)
+    }
 
-    return render(request, 'home.html')
+    return render(request, 'home.html', context)
+
