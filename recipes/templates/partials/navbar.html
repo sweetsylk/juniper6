@@ -1,9 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+  <!--add 'fixed-top' to the above line to have navbar remain at top even if you
+  scroll. It means some of your content gets covered though, so fix later-->
   
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">
+
+    <!--format the Brand Logo in the navbar-->
+    <a class="navbar-brand" href="{% url 'home' %}"> 
       Recipify
     </a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
