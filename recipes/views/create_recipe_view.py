@@ -7,7 +7,7 @@ from recipes.models import Recipe
 
 class CreateRecipeView(LoginRequiredMixin, CreateView):
     """ ... """
-    template_name = 'personal_page.html'
+    template_name = 'create_recipe_page.html'
     form_class = RecipeForm
     model = Recipe 
     

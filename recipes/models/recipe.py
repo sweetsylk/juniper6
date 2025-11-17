@@ -1,5 +1,6 @@
 from django.db import models
 from .user import User  
+from taggit.managers import TaggableManager
 
 class Recipe(models.Model):
     """
@@ -16,6 +17,7 @@ class Recipe(models.Model):
     servings = models.IntegerField()
     ingredients = models.TextField()
     instructions = models.TextField()
+    tags = TaggableManager()
     
 
     image = models.ImageField(upload_to='recipe_images/', blank=True, null=True)

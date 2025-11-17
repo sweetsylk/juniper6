@@ -21,11 +21,13 @@ class RecipeForm(forms.ModelForm):
             'prep_time', 
             'servings', 
             'ingredients', 
-            'instructions', 
+            'instructions',
+            'tags', 
             'image'
         ]
         
         labels = {
             'prep_time': 'Prep Time (in minutes)',
+            'tags' : 'Add tags',
             'image': 'Send a picture'
         }
