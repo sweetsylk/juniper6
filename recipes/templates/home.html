@@ -18,9 +18,10 @@
 
     <div class="row row-cols-3 row-cols-md-5 g-4">
 
-      {% for i in repeat_times%} <!--display newest 25 recipes by default-->
-        {%include "partials/test_card.html"%}
-      {%endfor%}
+      {% for recipe in recipes%} <!--display newest 25 recipes by default-->
+        {% include "partials/test_card.html" %}
+        <!--will add 'with recipe=recipe' to line above with the real partial so can fetch from recipes table-->
+      {% endfor %}
       
     </div>
 
@@ -30,10 +31,10 @@
         <!-- Section: CTA -->
         <section class="">
           <p class="d-flex justify-content-center align-items-center">
-            <span class="me-3">Showing recipes x - y</span> <!--need index var tbat say how many we're showing-->
-            <button type="button" class="btn btn-outline-light btn-rounded">
+            <span class="me-3">Showing {{ first }} - {{ last }} of {{ total }}</span>
+            <a href="{% url 'home_show_more' page %}"><button type="button" class="btn btn-outline-light btn-rounded">
               Show more!
-            </button>
+            </button></a>
           </p>
         </section>
         <!-- Section: CTA -->
