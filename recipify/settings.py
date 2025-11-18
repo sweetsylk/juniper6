@@ -39,10 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-<<<<<<< HEAD
-=======
     'taggit',
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
     'recipes',
 ]
 
@@ -141,20 +138,14 @@ LOGIN_URL = 'log_in'
 # URL where @login_prohibited redirects to
 REDIRECT_URL_WHEN_LOGGED_IN = 'dashboard'
 
-<<<<<<< HEAD
-=======
 # WHERE THE IMAGS ARE STORED ON THE SERVER!!
 MEDIA_ROOT = BASE_DIR / 'media'
 # URL to access it for developemrts
 MEDIA_URL = '/media/'
 
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
 # Convert Django ERROR messages to Bootstrap DANGER messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
-<<<<<<< HEAD
-=======
 
 TAGGIT_CASE_INSENSITIVE = True # this just ensures that the tags dont care about casing (recipts)
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08

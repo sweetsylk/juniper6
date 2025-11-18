@@ -6,9 +6,5 @@ django-widget-tweaks==1.5.0
 django-with-asserts==0.0.1
 libgravatar==1.0.4
 lxml==6.0.2
-<<<<<<< HEAD
-sqlparse==0.5.3
-=======
 sqlparse==0.5.3
 pillow==12.0.0
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08

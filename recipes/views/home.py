@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from models import Recipes
+from recipes.models import Recipes
 
 
 
@@ -23,12 +23,8 @@ def home_paginator(request):
 
     page_number = request.GET.get("page") #if url='', returns none
     page_obj = p.get_page(page_number) #django displays first page if get_page() value = None or invalid
-    
-    context = {
-        "page_obj": page_obj
-    }
 
-    return render(request, "home.html", context)
+    return render(request, "home.html", con{"page_obj": page_obj}text)
 
 
 """
