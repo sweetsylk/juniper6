@@ -15,12 +15,14 @@ crash code if not enough recipes in table
 
 def home_paginator(request):
     """Display home page, which shows cards_per_page more recent recipes from db."""
-    cards_per_page = 50
+
+    cards_per_page = 50 
+    #could add functionality to let user set this value using ?cpp= and cards_per_page = request.GET.get("cpp")
 
     p = Paginator(Recipes.objects.order_by('-id'), cards_per_page) #costly if db really big no?
 
-    page_number = request.GET.get("page") #passed in through ?page= in html page
-    page_obj = p.get_page(page_number) 
+    page_number = request.GET.get("page") #if url='', returns none
+    page_obj = p.get_page(page_number) #django displays first page if get_page() value = None or invalid
     
     context = {
         "page_obj": page_obj
@@ -30,6 +32,7 @@ def home_paginator(request):
 
 
 """
+https://docs.djangoproject.com/en/5.2/topics/pagination/
 
 >>> page_obj = p.get_page(page_number)
 does: 
@@ -38,7 +41,7 @@ does:
 - returns Pagination info: .has_next(), .has_previous(), .next_page_number(), .previous_page_number(), etc.
 
 
-p.get_page(page_number) returns many things, including:
+more of the pagination infor p.get_page(page_number) returns:
 
     page_obj.object_list	        The items on this page (QuerySet or list)
     page_obj.number                 Current page number (int)
