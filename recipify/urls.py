@@ -11,11 +11,7 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
-<<<<<<< HEAD
     1. Import the include() function: from django.urls import include, path
-=======
-    1. Import the include() function: from django.urls import include, paths
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
@@ -29,19 +25,13 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('<int:page>/', views.home_show_more, name='home_show_more'),
     path('dashboard/', views.dashboard, name='dashboard'),
-<<<<<<< HEAD
-=======
     path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
-<<<<<<< HEAD
-=======
+    path('recipe/', views.RecipePage.as_view(), name='recipe'),
     path('profile/view/', views.UserProfileView.as_view(), name='profile_view'),
-    
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
