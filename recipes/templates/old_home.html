@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block body %}
+  {% include 'partials/navbar.html' %}
+  {% include 'partials/messages.html' %}
+  {% block content %}
+  {% load static %} <!-- so I can load photo- find better (?) method later-->
+
+    <!--create partial for this page-->  
+    <div class="pt-3"> 
+      <div class="card mb-3">
+        <img src="{% static 'recipes/images/food.png' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5><a href="#" class="card-link">See whats new</a></h5>
+          <p class="card-text">Have a look at our newest additions.</p>
+          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <img src="{% static 'recipes/images/food.png' %}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5><a href="#" class="card-link">Recipe of the Week!</a></h5>
+        <p class="card-text">Check out the best recipes from this week!</p>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <img src="{% static 'recipes/images/food.png' %}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5><a href="#" class="card-link">Our all-time best recipe!</a></h5>
+        <p class="card-text">Check out our highest rated recipe!</p>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+    </div>
+
+
+    <div class="row h-50 align-items-stretch">
+      <div class="col-7 d-flex mb-3">
+        <div class="card flex-fill bg-light">
+          <div class="card-body">
+            <h1 class="cover-heading">Join the Family!</h1>
+            <p class="cover-text">Sign up so you never miss a thing!</p>  
+            <p>
+              <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary">
+                Sign up
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-5 d-flex mb-3">
+        <div class="card flex-fill bg-light">
+          <div class="card-body">
+            <h1 class="cover-heading">Recipify</h1>
+            <p class="cover-text">A recipe sharing app by Team <i>Juniper 6</i></p>
+            <p class="cover-text"> <i>Welcome home</i></p>
+            <p>
+              <a href='{% url 'log_in' %}' class="btn btn-lg btn-secondary">
+                Log in
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--For items in recipies table, {% include partial that makes a card
+    displaying recipe photo, name, and creator 
+    could make it a doomscroll using this but computationally would it suck ass?
+    would prob do 1-50, then have option to click for more
+
+    how would this be affected by filtering?
+    Just, for items in 'acceptable options'%}-->
+
+  {% endblock %}
+{% endblock %} 

@@ -23,12 +23,15 @@ from recipes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('<int:page>/', views.home_show_more, name='home_show_more'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('recipe/', views.RecipePage.as_view(), name='recipe'),
+    path('profile/view/', views.UserProfileView.as_view(), name='profile_view'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

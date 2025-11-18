@@ -11,7 +11,7 @@ def login_prohibited(view_function):
     where it doesn't make sense for an authenticated user to remain.
     If the user is already authenticated, they are redirected to the URL
     defined in `settings.REDIRECT_URL_WHEN_LOGGED_IN`.
-
+    
     Args:
         view_function (Callable): The Django view function being decorated.
 
