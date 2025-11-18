@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Team *enter team name here* Small Group project
+=======
+# Juniper6 - Small Group Project
+>>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
 
 ## Team members
 The members of the team are:
