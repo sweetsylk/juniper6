@@ -1,16 +1,15 @@
-<<<<<<< HEAD
-# Team *enter team name here* Small Group project
-=======
-# Juniper6 - Small Group Project
->>>>>>> cadcb8fcce326e19fc17777382d5fd16ba1a8e08
+
+# Team Juniper 6 Small Group project
+
+
 
 ## Team members
 The members of the team are:
-- *enter full name 1 here*
-- *enter full name 2 here*
-- *enter full name 3 here*
-- *enter full name 4 here*
-- *enter full name 5 here (or delete if not applicable)*
+- Ridwan Adam
+- Fatimah Alabdulmuhsin
+- Mekelle-Angel Owusu-Agyare
+- Adrian Yip
+- Jeremie Ntumba
 
 ## Project structure
 The project is called `recipify`.  It currently consists of a single app `recipes`.

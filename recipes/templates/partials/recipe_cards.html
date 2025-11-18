@@ -1,0 +1,16 @@
+{% load static %} <!-- so I can load photo for now-->
+
+<div class="col">
+  <div class="card rounded-card">
+    <img src="{{ recipe.image.url }}" class="card-img-top rounded-top-image" alt="...">
+    <div class="card-body">
+      <h5 class="card-title"><a class="link dark-link" href="#">{{ recipe.title }}</a></h5>
+      <h7 class="card-title"><a class="link user-link-style" href="#">{{ recipe.creator }}</a></h7>
+      <p class="card-text">{{ recipe.description }}</p>
+      <p class="card-text"><small class="text-muted">{{ recipe.tags }}</small></p>
+      <!--want tags to 'roll off' card with a ...  if too many to fit. Maybe same with description, 
+      or impose character limit. Each tag would also be a link to page of all recipes with that tag
+      could maybe even add a follow/favourite tag functionality-->
+    </div>
+  </div>
+</div>

@@ -27,6 +27,7 @@ from recipes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('<int:page>/', views.home_show_more, name='home_show_more'),
     path('dashboard/', views.dashboard, name='dashboard'),
 <<<<<<< HEAD
 =======
