@@ -1,128 +1,47 @@
 from django.shortcuts import render
-
-#from recipes.views.decorators import login_prohibited
-#commented out above and below lines because want to be able to go to home page
-#even if logged in
-
-#@login_prohibited
+from django.core.paginator import Paginator
+from recipes.models import Recipe
 
 
-"""Need to put pretty much all of this in try/except blocks"""
-    #currently if I type some shit like 'http://localhost:8000/200/' it works
-    #because not fetching from table, but if i do that once we start fetching, will
-    #crash code if not enough recipes in table
 
-"""GLOBALS"""
-cards_per_page = 50
+"""
+Need to put pretty much all of this in try/except blocks
+"""
+    
 
 
 def home(request):
-    """Display the application's home screen, which shows cards_per_page more recent recipes from db."""
+    """Display home page, which shows x number of most recent recipes from db."""
 
-    context = {
-    'page': 1,
+    cards_per_page = 50 
+    #could add functionality to let user set this value using ?cpp= and cards_per_page = request.GET.get("cpp")
 
-    'first': 1,
-    'last': cards_per_page,
+    p = Paginator(Recipe.objects.order_by('-id'), cards_per_page) #costly if db really big no?
 
-    'total': '[uninitialised]',
-    #'total': Recipes.objects.count(),
+    page_number = request.GET.get("page") #if url='', returns none
+    page_obj = p.get_page(page_number) #django displays first page if get_page() value = None or invalid
 
-    'recipes': [i for i in range(cards_per_page)], 
-    #'recipes' : Recipes.objects.order_by('-id')[:cards_per_page], 
- 
-    }
-
-    return render(request, 'home.html', context)
+    return render(request, "home.html", {"page_obj": page_obj})
 
 
-def home_show_more(request, page):
-    """Display cards_per_page more recipes on home page."""
-    #this code has a bug- will always skip a recipe
-    
-    #page value passed in = page currently on
-    start_idx = page * cards_per_page
-    page+=1 #page we want to go to
-    end_idx = page * cards_per_page
+"""
+https://docs.djangoproject.com/en/5.2/topics/pagination/
 
-    context = {
-    'page': page,
-    'first': start_idx + 1, 
-    'last': end_idx,
+>>> page_obj = p.get_page(page_number)
+does: 
+- int(page_number)
+- returns page obj containing The items on that page (page_obj.object_list)
+- returns Pagination info below (among others):
 
-    'total': '[uninitialised]',
-    #'total': Recipes.objects.count(),
+    page_obj.object_list	        The items on this page (QuerySet or list)
+    page_obj.number                 Current page number (int)
+    page_obj.paginator	            Reference to the parent Paginator object
+    page_obj.has_next()	            True if there's a next page
+    page_obj.has_previous()	        True if there's a previous page
+    page_obj.next_page_number()	    Number of the next page
+    page_obj.previous_page_number()	Number of the previous page
+    page_obj.start_index()	        Index of first item on this page
+    page_obj.end_index()	        Index of last item on this page
+    len(page_obj)	                Number of items on this page
 
-    'recipes': [i for i in range(cards_per_page)],
-    #'recipes' : Recipes.objects.order_by('-id')[start_idx:end_idx], 
-    }
-
-    return render(request, 'home.html', context)
-
-
-
-
-''' 
-NOTES 
-
-Making queries in django- https://docs.djangoproject.com/en/5.2/topics/db/queries/
-Retrieving objects^^
-
-QuerySet- collection of objects from db. can have 0 or more filters to narrow down query results based on given parameters
-
-"You get a QuerySet by using your model's Manager. Each model has at least one Manager, and it's called objects by default. 
-Access it directly via the model class, like so:
-
-    >>> Blog.objects
-    <django.db.models.manager.Manager object at ...>
-    >>> b = Blog(name='Foo', tagline='Bar')
-    >>> b.objects
-    Traceback:
-        ...
-    AttributeError: "Manager isn't accessible via Blog instances."
-"
-the Managers accessible from model classes only and not instances to enforce separation between “table-level” & “record-level” operations.
-
-    Model.objects.all()
-    - descibed all objects in db table. to specify though:
-
-    Model.objects.filter(**kwargs)
-    Model.objects.exclude(**kwargs)
-
-    Entry.objects.filter(pub_date__year=2006)
-
-
-
-useful sections in making queries section- Chaining filters, Retrieving a single object with get(), Limiting QuerySets, plus more!!
-
-Limiting QuerySets
-
-For example, this returns the first 5 objects (LIMIT 5):
->>> Entry.objects.all()[:5]
-
-This returns the sixth through tenth objects (OFFSET 5 LIMIT 5):
->>> Entry.objects.all()[5:10]
-
->>> Model.objects.last()
-- Returns the last object in the QuerySet, or None if empty.
-
->>> Model.objects.order_by(x).last()
-
->>> Recipes.objects.all()[:25] 
-- gets all fields from first 25 from Recipes model
-
->>> Model.objects.order_by('id')
-- orders the objects with id in ascending order
-
->>> Model.objects.order_by('-id')
-- orders object by '-id', so in descending order
-
->>> Model.objects.order_by('-id')[:5]
-- order with id in descending, then gives first 5
-- same as:
-    Model.objects.order_by('id')[-5:]
-- this one orders in asecnding order, then takes last 5
-- but apparently first way is considered cleaner
-
-
-'''
+"""

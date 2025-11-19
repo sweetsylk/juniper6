@@ -23,7 +23,6 @@ from recipes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('<int:page>/', views.home_show_more, name='home_show_more'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),

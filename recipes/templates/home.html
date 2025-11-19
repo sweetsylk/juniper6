@@ -18,9 +18,8 @@
 
     <div class="row row-cols-3 row-cols-md-5 g-4">
 
-      {% for recipe in recipes%} <!--display newest 25 recipes by default-->
-        {% include "partials/test_card.html" %}
-        <!--will add 'with recipe=recipe' to line above with the real partial so can fetch from recipes table-->
+      {% for recipe in page_obj %}
+        {% include "partials/recipe_card.html" with recipe=recipe %}
       {% endfor %}
       
     </div>
@@ -31,13 +30,19 @@
         <!-- Section: CTA -->
         <section class="">
           <p class="d-flex justify-content-center align-items-center">
-            <span class="me-3">Showing {{ first }} - {{ last }} of {{ total }}</span>
-            <a href="#" class="btn btn-outline-light btn-rounded" >
-              Previous
-            </a>
-            <a href="{% url 'home_show_more' page %}" class="btn btn-outline-light btn-rounded m-2">
-              Show more
-            </a>
+            <span class="me-3 current">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
+
+            {% if page_obj.has_previous %}
+                <a href="{% url 'home' %}?page={{ page_obj.previous_page_number }}" class="btn btn-outline-light btn-rounded" >
+                Previous
+                </a>
+            {%endif%}
+
+            {% if page_obj.has_next %}
+                <a href="{% url 'home' %}?page={{ page_obj.next_page_number }}" class="btn btn-outline-light btn-rounded m-2">
+                Show more
+                </a>
+            {%endif%}
           </p>
         </section>
         <!-- Section: CTA -->
@@ -53,11 +58,3 @@
 
   {% endblock %}
 {% endblock %} 
-
-<!--For items in recipies table, {% include partial that makes a card
-displaying recipe photo, name, and creator 
-could make it a doomscroll using this but computationally would it suck ass?
-would prob do 1-50, then have option to click for more
-
-how would this be affected by filtering?
-Just, for items in 'acceptable options'%}-->
