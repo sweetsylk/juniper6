@@ -1,0 +1,19 @@
+{% load static %} <!-- so I can load photo for now-->
+
+<div class="col d-flex">
+  <div class="card rounded-card flex-fill">
+    {% if recipe.image %}
+      <img src="{{ recipe.image.url }}" class="card-img-top rounded-top-image" alt="{{ recipe.title }}">
+    {% else %}
+      <img src="{% static 'recipes/images/no_img.png' %}" class="card-img-top rounded-top-image" alt="...">
+    {% endif %}
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title"><a class="link dark-link" href="#">{{ recipe.title }}</a></h5>
+      <h7 class="card-title"><a class="link user-link-style" href="#">{{ recipe.author }}</a></h7>
+      <p class="card-text">{{ recipe.description|truncatechars:85 }}</p>
+      <p class="card-text mt-auto"><small class="text-muted">{{ recipe.tags }}</small></p>
+      <!--add tag functionality-->
+    </div>
+  </div>
+</div>
+

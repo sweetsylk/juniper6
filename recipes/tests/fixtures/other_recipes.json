@@ -1,0 +1,48 @@
+[
+    
+    {
+        "model": "recipes.recipe",
+        "pk": 2,
+        "fields": {
+            "author": 2,
+            "title": "Chicken Salad",
+            "description": "Yummy and healthy",
+            "prep_time": 10,
+            "servings": 5,
+            "ingredients": "Chicken, Lettuce, Tomato",
+            "instructions": "Wash chicken, Wash salad, cook and season chicken",
+            "created_at": "2025-11-18T10:30:00Z",
+            "updated_at": "2025-11-18T19:12:00Z"
+        }
+    },
+    {
+        "model": "recipes.recipe",
+        "pk": 3,
+        "fields": {
+            "author": 3,
+            "title": "Fairy Cakes",
+            "description": "Sweet treats everyone will love!",
+            "prep_time": 20,
+            "servings": 24,
+            "ingredients": "Flour, Sugar, Butter, Egg, Milk",
+            "instructions": "Whisk sugar and butter together, Add eggs, Add milk, Add Flour",
+            "created_at": "2025-10-25T12:00:00Z",
+            "updated_at": "2025-10-25T19:00:00Z"
+        }
+    },
+    {
+        "model": "recipes.recipe",
+        "pk": 4,
+        "fields": {
+            "author": 2,
+            "title": "Cereal",
+            "description": "Good lazy breakfast",
+            "prep_time": 5,
+            "servings": 1,
+            "ingredients": "Coco pops, milk",
+            "instructions": "Add milk, add cereal",
+            "created_at": "2024-01-12T22:45:16Z",
+            "updated_at": "2024-08-01T19:12:22Z"
+        }
+    }
+]

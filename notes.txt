@@ -1,0 +1,90 @@
+NOTES 
+
+Making queries in django- https://docs.djangoproject.com/en/5.2/topics/db/queries/
+Retrieving objects^^
+
+QuerySet- collection of objects from db. can have 0 or more filters to narrow down query results based on given parameters
+
+"You get a QuerySet by using your model's Manager. Each model has at least one Manager, and it's called objects by default. 
+Access it directly via the model class, like so:
+
+    >>> Blog.objects
+    <django.db.models.manager.Manager object at ...>
+    >>> b = Blog(name='Foo', tagline='Bar')
+    >>> b.objects
+    Traceback:
+        ...
+    AttributeError: "Manager isn't accessible via Blog instances."
+"
+the Managers accessible from model classes only and not instances to enforce separation between “table-level” & “record-level” operations.
+
+    Model.objects.all()
+    - descibed all objects in db table. to specify though:
+
+    Model.objects.filter(**kwargs)
+    Model.objects.exclude(**kwargs)
+
+    Entry.objects.filter(pub_date__year=2006)
+
+
+
+useful sections in making queries section- Chaining filters, Retrieving a single object with get(), Limiting QuerySets, plus more!!
+
+Limiting QuerySets
+
+For example, this returns the first 5 objects (LIMIT 5):
+>>> Entry.objects.all()[:5]
+
+This returns the sixth through tenth objects (OFFSET 5 LIMIT 5):
+>>> Entry.objects.all()[5:10]
+
+>>> Model.objects.last()
+- Returns the last object in the QuerySet, or None if empty.
+
+>>> Model.objects.order_by(x).last()
+
+>>> Recipes.objects.all()[:25] 
+- gets all fields from first 25 from Recipes model
+
+>>> Model.objects.order_by('id')
+- orders the objects with id in ascending order
+
+>>> Model.objects.order_by('-id')
+- orders object by '-id', so in descending order
+
+>>> Model.objects.order_by('-id')[:5]
+- order with id in descending, then gives first 5
+- same as:
+    Model.objects.order_by('id')[-5:]
+- this one orders in asecnding order, then takes last 5
+- but apparently first way is considered cleaner
+
+
+
+
+2. Handling long text / tags gracefully
+Description
+
+To limit characters and add ellipsis:
+
+<p class="card-text">{{ recipe.description|truncatechars:100 }}</p>
+
+
+This will show the first 100 characters followed by ….
+
+Tags
+
+If recipe.tags is a string:
+
+<p class="card-text"><small class="text-muted">{{ recipe.tags|truncatechars:50 }}</small></p>
+
+
+If recipe.tags is a list (recommended), you can iterate and limit:
+
+{% for tag in recipe.tags.all|slice:":3" %}
+  <a href="{% url 'recipes_by_tag' tag.slug %}" class="badge bg-secondary">{{ tag.name }}</a>
+{% endfor %}
+{% if recipe.tags.count > 3 %}…{% endif %}
+
+
+This shows first 3 tags and adds an ellipsis if there are more.
