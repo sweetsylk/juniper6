@@ -6,7 +6,6 @@ class Recipe(models.Model):
     """
     model for a single recipe.
     """
-    
    
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
     
