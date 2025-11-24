@@ -110,3 +110,41 @@ class SearchResultsViewTests(TestCase):
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.paginator.count >= 20)
         self.assertTrue(page_obj.has_next() or page_obj.has_previous() or page_obj.paginator.num_pages >= 1)
+
+    def test_search_by_author_username(self):
+        """Searching by author's username returns recipes authored by that user."""
+        response = self.client.get(reverse('search_results'), {'search': 'user2'})
+        self.assertEqual(response.status_code, 200)
+    
+        # Recipes authored by user2
+        self.assertContains(response, 'Chicken Salad')
+        self.assertContains(response, 'Cereal')
+        
+        # Recipes NOT authored by user2 should not appear
+        self.assertNotContains(response, 'Chicken and Rice')
+        self.assertNotContains(response, 'Fairy Cakes')
+
+    def test_search_by_partial_username(self):
+        """Partial username search returns correct results."""
+        response = self.client.get(reverse('search_results'), {'search': 'user'})
+        self.assertEqual(response.status_code, 200)
+        
+        # All users have 'user' in their username, so all recipes appear
+        self.assertContains(response, 'Chicken and Rice')
+        self.assertContains(response, 'Chicken Salad')
+        self.assertContains(response, 'Fairy Cakes')
+        self.assertContains(response, 'Cereal')
+
+    def test_search_nonexistent_username(self):
+        """Searching for a username that doesn't exist returns no results."""
+        response = self.client.get(reverse('search_results'), {'search': 'nonexistentuser'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No recipes found')
+        
+        # Ensure none of the existing recipes are shown
+        self.assertNotContains(response, 'Chicken and Rice')
+        self.assertNotContains(response, 'Chicken Salad')
+        self.assertNotContains(response, 'Fairy Cakes')
+        self.assertNotContains(response, 'Cereal')
+
+
