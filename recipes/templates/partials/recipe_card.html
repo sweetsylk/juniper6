@@ -9,10 +9,14 @@
     {% endif %}
     <div class="card-body d-flex flex-column">
       <h5 class="card-title"><a class="link dark-link" href="{% url 'recipe' %}">{{ recipe.title }}</a></h5>
-      <h7 class="card-title"><a class="link user-link-style" href="{% url 'profile_view' %}">{{ recipe.author }}</a></h7>
-      <p class="card-text">{{ recipe.description|truncatechars:85 }}</p>
-      <p class="card-text mt-auto"><small class="text-muted">{{ recipe.tags }}</small></p>
-      <!--add tag functionality-->
+      <h7 class="card-title"><a class="link grey-link" href="{% url 'profile_view' %}">{{ recipe.author }}</a></h7>
+      <p class="card-text fs-14">{{ recipe.description|truncatechars:85 }}</p>
+      <p class="card-text mt-auto"><small class="text-muted">
+        {% for tag in recipe.tags.all|slice:":5" %}
+            <a class= 'tag-link' href='#'>#{{ tag.name }}</a>{% if forloop.last %}...{% endif %}
+        {% endfor %}
+        
+      </small></p>
     </div>
   </div>
 </div>

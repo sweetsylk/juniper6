@@ -128,16 +128,27 @@ h3.profile-title {
   color: #000000;
 }
 
-.dark-link a:hover {
-  text-decoration: underline;
+.grey-link {
+  text-decoration: none;
   color: #555555;
 }
 
-.user-link-style {
-  text-decoration: none;
-  color: #6d6d6d;
+.tag-link {
+  text-decoration: underline;
+  color: #848484;
 }
 
+/*
+ * Footer
+ */
 .footer-colour{
   background-color: #b0b0b0;
+}
+
+
+/*
+ * font sizes
+ */
+.fs-14 { 
+  font-size: 14px; 
 }

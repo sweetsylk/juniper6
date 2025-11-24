@@ -120,3 +120,48 @@ Where size is one of:
 5 - (by default) for classes that set the margin or padding to $spacer * 3
 auto - for classes that set the margin to auto
 (You can add more sizes by adding entries to the $spacers Sass map variable.)
+
+
+
+########### MANY-T0-MANY-FIELDS IN DJANGO ###########################################################
+Each row in model A can relate to many rows in model B
+Each row in model B can relate to many rows in model A
+
+E.g. each Recipe can have many tags and each tag can be associated with many recipes
+
+So, under the hood, Django creates a separate table to store the relationships, e.g.:
+
+recipe_id	tag_id
+1	        5
+1	        8
+2	        5
+
+
+Feature	Notes
+Assignment during create()      ❌ Not allowed; instance must exist first
+Manager methods	                .add(), .set(), .remove(), .clear()
+Accessing tags	                recipe.tags.all() → QuerySet of tags
+Querying	                    Recipe.objects.filter(tags__name='italian') → recipes with a given tag
+
+In most cases you do NOT need a separate tags model because Django’s ManyToManyField or django-taggit 
+already handles it for you
+
+
+########### Many to 'not many' ish thing? ###########
+How to make the number of instructions or ingredients dynamic?
+This is some kind of relationship idk- each recipe can have many ingredients and instructions but each 
+instruction not associated with many recipes because they are all unique user inputs, even if they say the 
+same thing (multiple recipes calling for 250g flour, for example)
+
+first of all, for ingedients, can just have user write in the unit of measurement per ingredient no?
+
+
+
+
+########### RANDOM.CHOICES() ###########################################################
+random.choices() signature:
+        random.choices(population, weights=None, *, cum_weights=None, k=1)
+        
+        population              ->   the list you want to sample from
+        weights / cum_weights   ->   optional weighting, use one or other not both
+        k                       ->   number of elements to pick (default 1)

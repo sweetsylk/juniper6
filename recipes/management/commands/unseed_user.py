@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     Attributes:
         help (str): Short description displayed when running
-            `python manage.py help unseed`.
+            `python manage.py help unseed_user`.
     """
     
     help = 'Seeds the database with sample data'

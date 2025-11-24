@@ -11,7 +11,7 @@ is swallowed and generation continues.
 
 from faker import Faker
 from faker_food import FoodProvider
-from random import randint, random
+from random import randint, choices
 from django.core.management.base import BaseCommand, CommandError
 from recipes.models import Recipe
 from recipes.models.user import User
@@ -20,7 +20,8 @@ from recipes.models.user import User
 recipe_fixtures = [{ 
     #gotta give these actual user instances as authors
     
-    "author": 1, "title": "Chicken and Rice",
+    "author": User.objects.first(), 
+    "title": "Chicken and Rice",
     "description": "Basic lunch but can be yummy",
     "prep_time": 10,
     "servings": 2,
@@ -29,7 +30,7 @@ recipe_fixtures = [{
     "created_at": "2025-11-16T15:28:00Z",
     "updated_at": "2025-11-17T19:12:00Z"
 },{
-    "author": 2,
+    "author": User.objects.last(),
     "title": "Chicken Salad",
     "description": "Yummy and healthy",
     "prep_time": 10,
@@ -39,7 +40,7 @@ recipe_fixtures = [{
     "created_at": "2025-11-18T10:30:00Z",
     "updated_at": "2025-11-18T19:12:00Z"
 },{
-    "author": 3,
+    "author": User.objects.order_by('?').first(),
     "title": "Fairy Cakes",
     "description": "Sweet treats everyone will love!",
     "prep_time": 20,
@@ -50,7 +51,7 @@ recipe_fixtures = [{
     "updated_at": "2025-10-25T19:00:00Z"
         
 },{
-    "author": 2,
+    "author": User.objects.order_by('?').last(),
     "title": "Cereal",
     "description": "Good lazy breakfast",
     "prep_time": 5,
@@ -133,12 +134,13 @@ class Command(BaseCommand):
         author = User.objects.order_by('?').first()
         title = self.faker.dish()
         description = self.faker.dish_description()
-        prep_time = self.faker.random_int(min=1, max=500)
-        servings = self.faker.random_int(min=1, max=500)
+        prep_time = self.faker.random_int(min=1, max=100)
+        servings = self.faker.random_int(min=1, max=50)
         ingredients = create_ingredients(self.faker)
         instructions = self.faker.paragraph()
         created_at = self.faker.date_time_between(start_date='-34y', end_date='now')
         updated_at = self.faker.date_time_between(start_date=created_at, end_date='now')
+        tags = create_tags(self.faker)
         
         self.try_create_recipe({
             "author": author,
@@ -149,7 +151,8 @@ class Command(BaseCommand):
             "ingredients": ingredients,
             "instructions": instructions,
             "created_at": created_at,
-            "updated_at": updated_at
+            "updated_at": updated_at,
+            "tags": tags
         })
        
     def try_create_recipe(self, data):
@@ -159,7 +162,7 @@ class Command(BaseCommand):
         Args:
             data (dict): Mapping with keys ``author``, ``title``,
                 ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                 ``instructions``, ``created_at``, and ``updated_at``.
+                 ``instructions``, ``created_at``, ``updated_at``, and ``tags``
         """
         try:
             self.create_recipe(data)
@@ -174,9 +177,9 @@ class Command(BaseCommand):
         Args:
             data (dict): Mapping with keys ``author``, ``title``,
                 ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                 ``instructions``, ``created_at``, and ``updated_at``.
+                 ``instructions``, ``created_at``, ``updated_at``, and ``tags``
         """
-        Recipe.objects.create(
+        recipe = Recipe.objects.create(
             author=data['author'],
             title = data['title'],
             description = data['description'],
@@ -187,6 +190,12 @@ class Command(BaseCommand):
             created_at = data['created_at'],
             updated_at = data['updated_at']
         )
+
+        """
+        tags is a many-to-many field and hence cannot be set during create()
+        hence define down below
+        """
+        recipe.tags.set(data['tags']) 
 
 def create_author_username(first_name, last_name):
     """
@@ -203,10 +212,31 @@ def create_author_username(first_name, last_name):
 
 def create_ingredients(faker):
     """
-    Generate a string of random ingedients
+    Generate a string of random ingredients
     """
     ingredients=[]
     for i in range(randint(1,15)): 
         ingredients.append(faker.ingredient())
 
     return ", ".join(ingredients)
+
+def create_tags(faker):
+    """
+    Generate a random list of tags
+
+    random.choices() signature:
+        random.choices(population, weights=None, *, cum_weights=None, k=1)        
+    """
+
+    gen_random = [
+        faker.ingredient,
+        faker.ethnic_category,
+        faker.dish,
+        faker.measurement,
+        faker.spice
+    ]
+
+    n = randint(1, 25)
+    tags = set(gen() for gen in choices(gen_random, k=n))
+
+    return list(tags)
