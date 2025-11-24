@@ -1,33 +1,51 @@
 from django import forms
-from ..models import Recipe 
+from django.forms import inlineformset_factory
+from ..models import Recipe, RecipeIngredient
 
 class RecipeForm(forms.ModelForm):
-    """
-    Form for creating and updating a Recipe. 
-    For now its just for user recipes which i have been dealing with
-    """
-
-    
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
-    ingredients = forms.CharField(widget=forms.Textarea(attrs={'rows': 6}))
     instructions = forms.CharField(widget=forms.Textarea(attrs={'rows': 8}))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
     class Meta:
         model = Recipe
-        
         fields = [
             'title', 
-            'description', 
+            'description',
             'prep_time', 
             'servings', 
-            'ingredients', 
-            'instructions',
+            'instructions', 
             'tags', 
             'image'
         ]
-        
-        labels = {
-            'prep_time': 'Prep Time (in minutes)',
-            'tags' : 'Add tags',
-            'image': 'Send a picture'
+       
+
+class RecipeIngredientForm(forms.ModelForm):
+    class Meta:
+        model = RecipeIngredient
+        fields = ['name', 'amount', 'unit']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Item (e.g banana)'
+            }),
+            'amount': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': '0',
+                'step': '0.1' 
+            }),
+            'unit': forms.Select(attrs={
+                'class': 'form-select' 
+            }),
         }
+
+IngredientFormSet = inlineformset_factory(
+    Recipe,                 
+    RecipeIngredient,       
+    form=RecipeIngredientForm, 
+    extra=5,     
+    can_delete=True         
+)       

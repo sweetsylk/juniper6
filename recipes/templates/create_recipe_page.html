@@ -3,14 +3,115 @@
 {% block content %}
 <div class="container">
   <div class="row">
-
     <div class="col-12 col-md-8 col-lg-6 mx-auto">
       <h1 class="mb-4">Make your own recipe</h1>
 
-
       <form action="{% url 'create_recipe' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
+
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+          {{ form.title }} {{ form.title.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+          {{ form.description }}
+          {{ form.description.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.prep_time.id_for_label }}" class="form-label">Prep Time</label>
+          {{ form.prep_time }}
+          {{ form.prep_time.errors }}
+        </div>
+
+        <hr class="my-4">
+        <h4 class="mb-3">Ingredients</h4>
+
+        {{ ingredients.management_form }}
+
+        <div class="row mb-2">
+          <div class="col-5">
+            <label class="fw-bold text-muted small">Ingredient Name</label>
+          </div>
+          <div class="col-3">
+            <label class="fw-bold text-muted small">Amount</label>
+          </div>
+          <div class="col-3">
+            <label class="fw-bold text-muted small">Unit</label>
+          </div>
+          <div class="col-1 text-center">
+            <label class="fw-bold text-muted small">Del</label>
+          </div>
+        </div>
+
+        <div id="ingredient-list">
+          {% for form in ingredients %}
+          {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+          {% endfor %}
+
+          <div class="row mb-2 align-items-center">
+
+            <div class="col-5">
+              {{ form.name }}
+              {% if form.name.errors %}
+              <div class="text-danger small">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-3">
+              {{ form.amount }}
+              {% if form.amount.errors %}
+              <div class="text-danger small">{{ form.amount.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-3">
+              {{ form.unit }}
+            </div>
+
+            <div class="col-1 text-center">
+              {% if ingredients.can_delete %}
+              <div class="form-check d-flex justify-content-center">
+                {{ form.DELETE }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <p class="text-muted small mt-2">
+          * Leave extra rows blank.
+        </p>
+
+        <hr class="my-4">
+
+        <div class="mb-3">
+          <label for="{{ form.servings.id_for_label }}" class="form-label">Servings</label>
+          {{ form.servings }}
+          {{ form.servings.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.instructions.id_for_label }}" class="form-label">Instructions</label>
+          {{ form.instructions }}
+          {{ form.instructions.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.tags.id_for_label }}" class="form-label">Tags</label>
+          {{ form.tags }}
+          {{ form.tags.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.image.id_for_label }}" class="form-label">Image</label>
+          {{ form.image }}
+          {{ form.image.errors }}
+        </div>
 
         <input type="submit" value="Upload Recipe" class="btn btn-primary w-100 mt-3">
       </form>

@@ -1,23 +1,27 @@
-
 from django import forms
 from django.test import TestCase
 from recipes.forms import RecipeForm
-from recipes.models import Recipe
+from recipes.models import Recipe, User
 
 class RecipeFormTestCase(TestCase):
-    # this rests the create recipe form
+    # This tests the create recipe form
+
+    fixtures = [
+        'recipes/tests/fixtures/default_user.json',
+        'recipes/tests/fixtures/default_recipe.json'
+    ]
 
     def setUp(self):
-       
+        self.user = User.objects.get(username='@johndoe')
         self.form_input = {
             'title': 'Philly Cheesestake',
             'description': 'Philly cheese stake meal so yummy',
             'prep_time': 30,
             'servings': 5,
-            'ingredients': 'Ribeye Steak, Melted Cheese, Onions, Bread',
             'instructions': 'IDK just make it bro',
             'tags': 'Meat, American, Sandwich'
         }
+      
 
     def test_form_contains_required_fields(self):
         form = RecipeForm()
@@ -25,20 +29,17 @@ class RecipeFormTestCase(TestCase):
         self.assertIn('description', form.fields)
         self.assertIn('prep_time', form.fields)
         self.assertIn('servings', form.fields)
-        self.assertIn('ingredients', form.fields)
         self.assertIn('instructions', form.fields)
         self.assertIn('tags', form.fields)
         self.assertIn('image', form.fields)
-
+       
     def test_form_uses_correct_widgets(self):
         form = RecipeForm()
         self.assertIsInstance(form.fields['description'].widget, forms.Textarea)
-        self.assertIsInstance(form.fields['ingredients'].widget, forms.Textarea)
         self.assertIsInstance(form.fields['instructions'].widget, forms.Textarea)
         
-        # Check widget attributes defined in the form class
+        # Check that your forms.py sets these attributes correctly
         self.assertEqual(form.fields['description'].widget.attrs['rows'], 3)
-        self.assertEqual(form.fields['ingredients'].widget.attrs['rows'], 6)
         self.assertEqual(form.fields['instructions'].widget.attrs['rows'], 8)
 
     def test_form_accepts_valid_input(self):
@@ -52,11 +53,6 @@ class RecipeFormTestCase(TestCase):
 
     def test_form_rejects_blank_description(self):
         self.form_input['description'] = ''
-        form = RecipeForm(data=self.form_input)
-        self.assertFalse(form.is_valid())
-
-    def test_form_rejects_blank_ingredients(self):
-        self.form_input['ingredients'] = ''
         form = RecipeForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
@@ -90,11 +86,12 @@ class RecipeFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_form_save_handles_model_instance(self):
-      
         form = RecipeForm(data=self.form_input)
         if form.is_valid():
-            recipe = form.save(commit=False)
+            # We must assign an author before saving because the model requires it
+            form.instance.author = self.user 
+            recipe = form.save()
             self.assertIsInstance(recipe, Recipe)
             self.assertEqual(recipe.title, 'Philly Cheesestake')
         else:
-            self.fail("form aint valid")
+            self.fail("Form is not valid: " + str(form.errors))
