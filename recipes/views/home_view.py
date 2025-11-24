@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from recipes.models import Recipe
 
@@ -15,12 +15,11 @@ def home(request):
 
     cards_per_page = 50 
     #could add functionality to let user set this value using ?cpp= and cards_per_page = request.GET.get("cpp")
+    p = Paginator(Recipe.objects.order_by('-id'), cards_per_page)
+    page_number = request.GET.get("page")
+    page_obj = p.get_page(page_number)
 
-    p = Paginator(Recipe.objects.order_by('-id'), cards_per_page) #costly if db really big no?
-
-    page_number = request.GET.get("page") #if url='', returns none
-    page_obj = p.get_page(page_number) #django displays first page if get_page() value = None or invalid
-
+   
     return render(request, "home.html", {"page_obj": page_obj})
 
 
