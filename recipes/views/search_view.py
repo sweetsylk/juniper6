@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.db.models import Q
 from recipes.models import Recipe
 
 def search_results(request):
     """
-    Search recipes by title and display results with pagination.
+    Search recipes by title or author's username and display results with pagination.
 
     - This view searches the Recipe model based on the title field
     - It supports pagination to show 15 recipes per page.
@@ -24,7 +25,9 @@ def search_results(request):
     query = request.GET.get('search', '')
     
     if query:
-        recipes = Recipe.objects.filter(title__icontains=query).order_by('-created_at')
+        recipes = Recipe.objects.filter(
+            Q(title__icontains=query) | Q(author__username__icontains=query)
+        ).order_by('-created_at')
     else:
         recipes = Recipe.objects.none()  # empty queryset if no query
 

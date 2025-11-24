@@ -44,8 +44,8 @@
     {% else %}
     <!-- No recipes found -->
     <p class="text-center mt-4">
-        No recipes found for {{ query }}
-        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm ms-2">Go back home</a>
+        No recipes found matching "{{ query }}."
+        <a href="{% url 'home' %}" class="btn btn-primary btn-sm ms-2">Go back home</a>
     </p>
     {% endif %}
 
