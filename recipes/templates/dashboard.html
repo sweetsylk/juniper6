@@ -1,10 +1,18 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container">
+
   <div class="row">
     <div class="col-12">
       <h1>Welcome to your dashboard {{ user.username }}</h1>
     </div>
   </div>
+
+  <div class="row">
+    <a href="{% url 'your_recipes' %}" class="btn btn-outline-secondary btn-rounded">View Recipes</a>
+    <a href="{% url 'profile_view' %}" class="btn btn-outline-secondary btn-rounded">View profile</a>
+    <a href="#" class="btn btn-outline-secondary btn-rounded">View saved</a>
+  </div>
+
 </div>
 {% endblock %}

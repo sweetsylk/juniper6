@@ -1,19 +1,15 @@
+
+from django.conf import settings
+
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from recipes.models import Recipe
 
 
-
-"""
-Need to put pretty much all of this in try/except blocks
-"""
-    
-
-
 def home(request):
     """Display home page, which shows x number of most recent recipes from db."""
 
-    cards_per_page = 50 
+    cards_per_page = getattr(settings, "CARDS_PER_PAGE", 50)
     #could add functionality to let user set this value using ?cpp= and cards_per_page = request.GET.get("cpp")
     p = Paginator(Recipe.objects.order_by('-id'), cards_per_page)
     page_number = request.GET.get("page")

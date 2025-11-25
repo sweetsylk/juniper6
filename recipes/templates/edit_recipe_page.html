@@ -1,0 +1,20 @@
+{% extends 'base_content.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+      <h1 class="mb-4">Edit your recipe</h1>
+
+
+      <form action="{% url 'create_recipe' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'partials/bootstrap_form.html' with form=form %}
+
+        <input type="submit" value="Upload Recipe" class="btn btn-primary w-100 mt-3">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

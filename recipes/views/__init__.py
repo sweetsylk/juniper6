@@ -8,5 +8,9 @@ from .sign_up_view import *
 from .recipe_page_view import *
 from .profile_view_only import * 
 from .create_recipe_view import *
+from .tags_view import *
+from .your_recipes_view import *
+from .edit_recipe_view import *
 from .search_view import *
+
 
