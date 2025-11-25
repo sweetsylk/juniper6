@@ -27,6 +27,8 @@ urlpatterns = [
     path('home/<str:tag>', views.tag, name='tag'),
 
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/your_recipes/', views.UserRecipesView.as_view(), name='your_recipes'), 
+    path('dashboard/your_recipes/edit/<int:recipe_id>', views.EditRecipeView.as_view(), name='update_recipe'), 
 
     path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
 
