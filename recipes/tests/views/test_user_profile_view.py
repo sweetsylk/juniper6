@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from recipes.models import User, Recipe
+from recipes.models import User, Recipe, RecipeIngredient 
 from recipes.tests.helpers import reverse_with_next
 from recipes.tests.helpers import LogInTester
 
@@ -39,24 +39,25 @@ class UserProfileViewTestCase(TestCase, LogInTester):
     def test_recipe_count_correct(self):
         self.client.login(username=self.user.username, password='Password123')
 
-        Recipe.objects.create(
+        r1 = Recipe.objects.create(
             author=self.user,
             title="Test 1",
             description="desc",
             prep_time=10,
             servings=2,
-            ingredients="ing",
             instructions="instr"
         )
-        Recipe.objects.create(
+        RecipeIngredient.objects.create(recipe=r1, name="ing", amount=1, unit="pcs")
+
+        r2 = Recipe.objects.create(
             author=self.user,
             title="Test 2",
             description="desc",
             prep_time=10,
             servings=2,
-            ingredients="ing",
             instructions="instr"
         )
+        RecipeIngredient.objects.create(recipe=r2, name="ing", amount=1, unit="pcs")
 
         response = self.client.get(self.url)
         self.assertEqual(response.context['recipe_count'], 2)
@@ -70,9 +71,10 @@ class UserProfileViewTestCase(TestCase, LogInTester):
             description="desc",
             prep_time=10,
             servings=2,
-            ingredients="ing",
+          
             instructions="instr"
         )
+        RecipeIngredient.objects.create(recipe=recipe, name="ing", amount=1, unit="pcs")
 
         response = self.client.get(self.url)
         self.assertIn(recipe, response.context['user_recipes'])

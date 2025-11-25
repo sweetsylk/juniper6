@@ -1,37 +1,16 @@
-"""
-Management command to seed the database with demo data.
-
-This command creates a small set of named fixture recipes and then fills up
-to ``RECIPE_COUNT`` total recipes using Faker-generated data. Existing records
-are left untouched—if a create fails (e.g., due to duplicates), the error
-is swallowed and generation continues.
-"""
-
-
 import requests
 from faker import Faker
 from faker_food import FoodProvider
-from random import randint, choices, choice
+from random import randint, choices, choice, uniform
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
-from recipes.models import Recipe
-from recipes.models.user import User
+from recipes.models import Recipe, RecipeIngredient, User # Imported RecipeIngredient
 from recipes.constants import RECIPE_FIXTURES, FOOD_SOURCES
-
 
 
 class Command(BaseCommand):
     """
     Build automation command to seed the recipes database with data.
-
-    This command inserts a small set of known recipes (``recipe_fixtures``) and then
-    repeatedly generates additional random recipes until ``RECIPE_COUNT`` total recipes
-    exist in the database. Each generated recipe receives the same default password.
-
-    Attributes:
-        RECIPE_COUNT (int): Target total number of recipes in the database.
-        help (str): Short description shown in ``manage.py help``.
-        faker (Faker): Locale-specific Faker instance used for random data.
     """
 
     RECIPE_COUNT = 500
@@ -44,22 +23,10 @@ class Command(BaseCommand):
         self.faker.add_provider(FoodProvider)
 
     def handle(self, *args, **options):
-        """
-        Django entrypoint for the command.
-
-        Runs the full seeding workflow and stores ``self.recipes`` for any
-        post-processing or debugging (not required for operation).
-        """
         self.create_recipes()
         self.recipes = Recipe.objects.all()
 
     def create_recipes(self):
-        """
-        Create fixture recipes and then generate random recipes up to RECIPE_COUNT.
-
-        The process is idempotent in spirit: attempts that fail (e.g., due to
-        uniqueness constraints on fields) are ignored and generation continues.
-        """
         self.generate_recipe_fixtures()
         self.generate_random_recipes()
 
@@ -69,13 +36,8 @@ class Command(BaseCommand):
             self.try_create_recipe(data)
 
     def generate_random_recipes(self):
-        """
-        Generate random recipes until the database contains RECIPE_COUNT recipes.
-
-        Prints a simple progress indicator to stdout during generation.
-        """
         recipe_count = Recipe.objects.count()
-        while  recipe_count < self.RECIPE_COUNT:
+        while recipe_count < self.RECIPE_COUNT:
             print(f"Seeding recipe {recipe_count}/{self.RECIPE_COUNT}", end='\r')
             self.generate_recipe()
             recipe_count = Recipe.objects.count()
@@ -83,139 +45,123 @@ class Command(BaseCommand):
 
     def generate_recipe(self):
         """
-        Generate a single random recipe and attempt to insert it.
-
-        Uses Faker for first/last names, then derives a simple username for the author.
-        Uses faker-food to generate a random dish name and description
+        Generate a single random recipe.
         """
         author = User.objects.order_by('?').first()
         title = self.faker.dish()
         description = self.faker.dish_description()
-        prep_time = self.faker.random_int(min=1, max=100)
-        servings = self.faker.random_int(min=1, max=50)
-        ingredients = create_ingredients(self.faker)
+        prep_time = self.faker.random_int(min=5, max=120)
+        servings = self.faker.random_int(min=1, max=10)
         instructions = self.faker.paragraph()
-        created_at = self.faker.date_time_between(start_date='-34y', end_date='now')
+        created_at = self.faker.date_time_between(start_date='-2y', end_date='now')
         updated_at = self.faker.date_time_between(start_date=created_at, end_date='now')
         tags = create_tags(self.faker)
         img_data = create_image()
+        
+        # NEW: Generate structured ingredient data
+        ingredients_list = create_ingredients_list(self.faker)
 
-        
-        
         self.try_create_recipe({
             "author": author,
             "title": title,
             "description": description,
             "prep_time": prep_time,
             "servings": servings,
-            "ingredients": ingredients,
             "instructions": instructions,
             "tags": tags,
             "image": img_data,
             "created_at": created_at,
-            "updated_at": updated_at
-            
+            "updated_at": updated_at,
+            "ingredients": ingredients_list # Pass the list, not a string
         })
        
     def try_create_recipe(self, data):
-        """
-        Attempt to create a recipe and ignore any errors.
-
-        Args:
-            data (dict): Mapping with keys ``author``, ``title``,
-                ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                ``instructions``, ``tags``,``image``, ``created_at``, and ``updated_at`` 
-        """
         try:
             self.create_recipe(data)
         except Exception as e:
-            print(f"Failed to create recipe '{data['title']}': {e}")
+            print(f"Failed to create recipe '{data.get('title', 'Unknown')}': {e}")
             pass
 
     def create_recipe(self, data):
         """
-        Create a recipe.
-
-        Args:
-            data (dict): Mapping with keys ``author``, ``title``,
-                ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                ``instructions``, ``tags``,``image``, ``created_at``, and ``updated_at`` 
+        Create a recipe and its related ingredients.
         """
-        recipe = Recipe.objects.create(
-            author=data['author'],
-            title = data['title'],
-            description = data['description'],
-            prep_time = data['prep_time'],
-            servings = data['servings'],
-            ingredients = data['ingredients'],
-            instructions = data['instructions'],
-            created_at = data['created_at'],
-            updated_at = data['updated_at']
-        )
+        # 1. Extract ingredients from data so we don't pass it to Recipe.create
+        ingredients_data = data.pop('ingredients', []) 
+        
+        # 2. Extract tags and image
+        tags = data.pop('tags', [])
+        image_data = data.pop('image', None)
 
-        """
-        tags is a many-to-many field and hence cannot be set during create()
-        hence define down below
+        # 3. Create the base Recipe
+        recipe = Recipe.objects.create(**data)
 
-        images also can't be set during create()
+        # 4. Save Image
+        if image_data:
+            recipe.image.save(
+                f"recipe_{recipe.id}.jpg",
+                ContentFile(image_data),
+                save=True
+            )
+
+        # 5. Set Tags
+        recipe.tags.set(tags)
+
+        # 6. Create Ingredients (The new part)
+        # We check if ingredients_data is a string (old fixtures) or list (new randoms)
+        if isinstance(ingredients_data, str):
+            # Fallback for old fixtures: split string and use defaults
+            items = [x.strip() for x in ingredients_data.split(',')]
+            for item in items:
+                RecipeIngredient.objects.create(
+                    recipe=recipe,
+                    name=item,
+                    amount=1,      # Default amount
+                    unit='pcs'     # Default unit
+                )
+        elif isinstance(ingredients_data, list):
+            # Handle the new dictionary format
+            for ing in ingredients_data:
+                RecipeIngredient.objects.create(
+                    recipe=recipe,
+                    name=ing['name'],
+                    amount=ing['amount'],
+                    unit=ing['unit']
+                )
+
+def create_ingredients_list(faker):
+    """
+    Generate a list of dictionaries for ingredients.
+    Returns: [{'name': 'Salt', 'amount': 10, 'unit': 'g'}, ...]
+    """
+    ingredients = []
+    valid_units = ['g', 'kg', 'ml', 'l', 'cup', 'tbsp', 'tsp', 'pcs']
     
-        """
-        recipe.tags.set(data['tags'], [])
+    # Generate 3 to 12 ingredients
+    for _ in range(randint(3, 12)): 
+        ingredients.append({
+            'name': faker.ingredient(),
+            'amount': randint(1, 500), # Simple integer amounts
+            'unit': choice(valid_units)
+        })
 
-        recipe.image.save(
-            f"recipe_{recipe.id}.jpg",
-            ContentFile(data['image']),
-            save=True
-        )
-
-def create_author_username(first_name, last_name):
-    """
-    Construct a simple username from first and last names.
-
-    Args:
-        first_name (str): Given name.
-        last_name (str): Family name.
-
-    Returns:
-        str: A username in the form ``@{firstname}{lastname}`` (lowercased).
-    """
-    return '@' + first_name.lower() + last_name.lower()
-
-def create_ingredients(faker):
-    """
-    Generate a string of random ingredients
-    """
-    ingredients=[]
-    for i in range(randint(1,15)): 
-        ingredients.append(faker.ingredient())
-
-    return ", ".join(ingredients)
+    return ingredients
 
 def create_tags(faker):
-    """
-    Generate a random list of tags
-
-    random.choices() signature:
-        random.choices(population, weights=None, *, cum_weights=None, k=1)        
-    """
-
     gen_random = [
-        faker.ingredient,
         faker.ethnic_category,
         faker.dish,
         faker.measurement,
         faker.spice
     ]
-
-    n = randint(1, 25)
+    n = randint(1, 5) # Reduced max tags for sanity
     tags = set(gen() for gen in choices(gen_random, k=n))
-
     return list(tags)
 
 def create_image():
-    img_url = choice(FOOD_SOURCES)
-    img_data = requests.get(img_url).content
-
-    return img_data
-
-    
+    try:
+        img_url = choice(FOOD_SOURCES)
+        img_data = requests.get(img_url, timeout=5).content
+        return img_data
+    except:
+        return None # Return None if image fetch fails so script continues

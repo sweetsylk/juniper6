@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from recipes.models import Recipe, User
+from recipes.models import Recipe, User, RecipeIngredient
 from datetime import datetime
 
 class SearchResultsViewTests(TestCase):
@@ -18,7 +18,8 @@ class SearchResultsViewTests(TestCase):
         self.user2 = User.objects.create(username='user2', email='user2@example.com')
         self.user3 = User.objects.create(username='user3', email='user3@example.com')
 
-        # Seed recipes
+        # Seed recipes data (We keep ingredients as a string here for easy reading, 
+        # but we will process it manually below)
         recipe_data = [
             {
                 "author": self.user1,
@@ -26,7 +27,7 @@ class SearchResultsViewTests(TestCase):
                 "description": "Basic lunch but can be yummy",
                 "prep_time": 10,
                 "servings": 2,
-                "ingredients": "Chicken, Rice",
+                "ingredients": "Chicken, Rice", 
                 "instructions": "Cook rice, cook and season chicken",
                 "created_at": datetime(2025, 11, 16, 15, 28),
                 "updated_at": datetime(2025, 11, 17, 19, 12)
@@ -67,7 +68,17 @@ class SearchResultsViewTests(TestCase):
         ]
 
         for data in recipe_data:
-            Recipe.objects.create(**data)
+            ingredients_str = data.pop('ingredients')
+            recipe = Recipe.objects.create(**data)
+            item_names = [x.strip() for x in ingredients_str.split(',')]
+            
+            for name in item_names:
+                RecipeIngredient.objects.create(
+                    recipe=recipe,
+                    name=name,
+                    amount=1,    
+                    unit='pcs'   
+                )
 
     def test_search_found(self):
         """Searching for a term that exists in recipe titles returns results."""
@@ -90,7 +101,7 @@ class SearchResultsViewTests(TestCase):
 
     def test_search_pagination(self):
         """Searching returns results with correct pagination."""
-        # Create additional recipes to test pagination
+      
         for i in range(20):
             Recipe.objects.create(
                 author=self.user1,
@@ -98,7 +109,6 @@ class SearchResultsViewTests(TestCase):
                 description="Extra test recipe",
                 prep_time=10,
                 servings=1,
-                ingredients="Test ingredients",
                 instructions="Test instructions",
                 created_at=datetime(2025, 1, 1, 12, 0),
                 updated_at=datetime(2025, 1, 1, 12, 0)
@@ -116,11 +126,10 @@ class SearchResultsViewTests(TestCase):
         response = self.client.get(reverse('search_results'), {'search': 'user2'})
         self.assertEqual(response.status_code, 200)
     
-        # Recipes authored by user2
+        
         self.assertContains(response, 'Chicken Salad')
         self.assertContains(response, 'Cereal')
-        
-        # Recipes NOT authored by user2 should not appear
+    
         self.assertNotContains(response, 'Chicken and Rice')
         self.assertNotContains(response, 'Fairy Cakes')
 
@@ -128,8 +137,6 @@ class SearchResultsViewTests(TestCase):
         """Partial username search returns correct results."""
         response = self.client.get(reverse('search_results'), {'search': 'user'})
         self.assertEqual(response.status_code, 200)
-        
-        # All users have 'user' in their username, so all recipes appear
         self.assertContains(response, 'Chicken and Rice')
         self.assertContains(response, 'Chicken Salad')
         self.assertContains(response, 'Fairy Cakes')
@@ -141,10 +148,8 @@ class SearchResultsViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'No recipes found')
         
-        # Ensure none of the existing recipes are shown
+       
         self.assertNotContains(response, 'Chicken and Rice')
         self.assertNotContains(response, 'Chicken Salad')
         self.assertNotContains(response, 'Fairy Cakes')
         self.assertNotContains(response, 'Cereal')
-
-
