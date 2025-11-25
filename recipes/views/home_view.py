@@ -18,8 +18,6 @@ def home(request):
     p = Paginator(Recipe.objects.order_by('-id'), cards_per_page)
     page_number = request.GET.get("page")
     page_obj = p.get_page(page_number)
-
-   
     return render(request, "home.html", {"page_obj": page_obj})
 
 
