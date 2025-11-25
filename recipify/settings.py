@@ -141,6 +141,7 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'dashboard'
 
 # WHERE THE IMAGS ARE STORED ON THE SERVER!!
 MEDIA_ROOT = BASE_DIR / 'media'
+
 # URL to access it for developemrts
 MEDIA_URL = '/media/'
 
@@ -150,3 +151,7 @@ MESSAGE_TAGS = {
 }
 
 TAGGIT_CASE_INSENSITIVE = True # this just ensures that the tags dont care about casing (recipts)
+
+
+# CONFIGURATIONS
+CARDS_PER_PAGE = 50

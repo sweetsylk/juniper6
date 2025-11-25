@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block body %}
+  {% include 'partials/navbar.html' %}
+  {% include 'partials/messages.html' %}
+  {% block content %}
+  {% load static %}
+
+  <div class="container-fluid"> 
+
+    <div class="row">
+      <div class="col-12">
+        <h1>Showing recipes tagged: "{{ tag }}"</h1>
+      </div>
+    </div>
+
+    {% if page_obj %}
+  
+        <div class="row row-cols-3 row-cols-md-5 g-4">
+
+        {% for recipe in page_obj %}
+            {% include "partials/recipe_card.html" with recipe=recipe %}
+        {% endfor %}
+        
+        </div>
+
+        <footer class="text-center text-white mt-4 footer-colour">
+        <!-- Grid container -->
+        <div class="container p-4 pb-1">
+            <!-- Section: CTA -->
+            <section class="">
+            <p class="d-flex justify-content-center align-items-center">
+                <span class="me-3 current">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
+
+                {% if page_obj.has_previous %}
+                    <a href="{% url 'tag' tag=tag%}?page={{ page_obj.previous_page_number }}" class="btn btn-outline-light btn-rounded" >
+                    Previous
+                    </a>
+                {%endif%}
+
+                {% if page_obj.has_next %}
+                    <a href="{% url 'tag' tag=tag%}?page={{ page_obj.next_page_number }}" class="btn btn-outline-light btn-rounded m-2">
+                    Show more
+                    </a>
+                {%endif%}
+            </p>
+            </section>
+            <!-- Section: CTA -->
+        </div>
+        <!-- Grid container -->
+        </footer>
+    
+    {% else %}
+        <div class="row row-cols-3 row-cols-md-5 g-4">
+            <h6>No results</h6>
+        </div>
+    
+    {% endif %}
+
+
+  </div>
+
+
+    
+
+  {% endblock %}
+{% endblock %} 

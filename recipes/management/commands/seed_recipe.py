@@ -8,59 +8,16 @@ is swallowed and generation continues.
 """
 
 
-
+import requests
 from faker import Faker
 from faker_food import FoodProvider
-from random import randint, choices
+from random import randint, choices, choice
 from django.core.management.base import BaseCommand, CommandError
+from django.core.files.base import ContentFile
 from recipes.models import Recipe
 from recipes.models.user import User
+from recipes.constants import RECIPE_FIXTURES, FOOD_SOURCES
 
-
-recipe_fixtures = [{ 
-    #gotta give these actual user instances as authors
-    
-    "author": User.objects.first(), 
-    "title": "Chicken and Rice",
-    "description": "Basic lunch but can be yummy",
-    "prep_time": 10,
-    "servings": 2,
-    "ingredients": "Chicken, Rice",
-    "instructions": "Cook rice, cook and season chicken",
-    "created_at": "2025-11-16T15:28:00Z",
-    "updated_at": "2025-11-17T19:12:00Z"
-},{
-    "author": User.objects.last(),
-    "title": "Chicken Salad",
-    "description": "Yummy and healthy",
-    "prep_time": 10,
-    "servings": 5,
-    "ingredients": "Chicken, Lettuce, Tomato",
-    "instructions": "Wash chicken, Wash salad, cook and season chicken",
-    "created_at": "2025-11-18T10:30:00Z",
-    "updated_at": "2025-11-18T19:12:00Z"
-},{
-    "author": User.objects.order_by('?').first(),
-    "title": "Fairy Cakes",
-    "description": "Sweet treats everyone will love!",
-    "prep_time": 20,
-    "servings": 24,
-    "ingredients": "Flour, Sugar, Butter, Egg, Milk",
-    "instructions": "Whisk sugar and butter together, Add eggs, Add milk, Add Flour",
-    "created_at": "2025-10-25T12:00:00Z",
-    "updated_at": "2025-10-25T19:00:00Z"
-        
-},{
-    "author": User.objects.order_by('?').last(),
-    "title": "Cereal",
-    "description": "Good lazy breakfast",
-    "prep_time": 5,
-    "servings": 1,
-    "ingredients": "Coco pops, milk",
-    "instructions": "Add milk, add cereal",
-    "created_at": "2024-01-12T22:45:16Z",
-    "updated_at": "2024-08-01T19:12:22Z"
-}]
 
 
 class Command(BaseCommand):
@@ -108,7 +65,7 @@ class Command(BaseCommand):
 
     def generate_recipe_fixtures(self):
         """Attempt to create each predefined fixture recipe."""
-        for data in recipe_fixtures:
+        for data in RECIPE_FIXTURES:
             self.try_create_recipe(data)
 
     def generate_random_recipes(self):
@@ -141,6 +98,9 @@ class Command(BaseCommand):
         created_at = self.faker.date_time_between(start_date='-34y', end_date='now')
         updated_at = self.faker.date_time_between(start_date=created_at, end_date='now')
         tags = create_tags(self.faker)
+        img_data = create_image()
+
+        
         
         self.try_create_recipe({
             "author": author,
@@ -150,9 +110,11 @@ class Command(BaseCommand):
             "servings": servings,
             "ingredients": ingredients,
             "instructions": instructions,
+            "tags": tags,
+            "image": img_data,
             "created_at": created_at,
-            "updated_at": updated_at,
-            "tags": tags
+            "updated_at": updated_at
+            
         })
        
     def try_create_recipe(self, data):
@@ -162,12 +124,12 @@ class Command(BaseCommand):
         Args:
             data (dict): Mapping with keys ``author``, ``title``,
                 ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                 ``instructions``, ``created_at``, ``updated_at``, and ``tags``
+                ``instructions``, ``tags``,``image``, ``created_at``, and ``updated_at`` 
         """
         try:
             self.create_recipe(data)
         except Exception as e:
-            print(e)
+            print(f"Failed to create recipe '{data['title']}': {e}")
             pass
 
     def create_recipe(self, data):
@@ -177,7 +139,7 @@ class Command(BaseCommand):
         Args:
             data (dict): Mapping with keys ``author``, ``title``,
                 ``description``, ``prep_time``, ``servings``, ``ingredients``,
-                 ``instructions``, ``created_at``, ``updated_at``, and ``tags``
+                ``instructions``, ``tags``,``image``, ``created_at``, and ``updated_at`` 
         """
         recipe = Recipe.objects.create(
             author=data['author'],
@@ -194,8 +156,17 @@ class Command(BaseCommand):
         """
         tags is a many-to-many field and hence cannot be set during create()
         hence define down below
+
+        images also can't be set during create()
+    
         """
-        recipe.tags.set(data['tags']) 
+        recipe.tags.set(data['tags'], [])
+
+        recipe.image.save(
+            f"recipe_{recipe.id}.jpg",
+            ContentFile(data['image']),
+            save=True
+        )
 
 def create_author_username(first_name, last_name):
     """
@@ -240,3 +211,11 @@ def create_tags(faker):
     tags = set(gen() for gen in choices(gen_random, k=n))
 
     return list(tags)
+
+def create_image():
+    img_url = choice(FOOD_SOURCES)
+    img_data = requests.get(img_url).content
+
+    return img_data
+
+    
