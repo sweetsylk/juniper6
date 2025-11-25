@@ -1,0 +1,7 @@
+<!-- This page makes the search bar for the navbar  -->
+
+<form class="d-flex flex-grow-1" role="search" method="get" action="{% url 'search_results' %}">
+    <input class="form-control flex-grow-1 me-2" type="search" name="search" placeholder="Search recipes..."
+        aria-label="Search">
+    <button class="btn btn-outline-light" type="submit">Search</button>
+</form>

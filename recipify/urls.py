@@ -41,7 +41,8 @@ urlpatterns = [
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('profile/view/', views.UserProfileView.as_view(), name='profile_view'),
-    
+    path('search/', views.search_results, name='search_results'),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -11,3 +11,6 @@ from .create_recipe_view import *
 from .tags_view import *
 from .your_recipes_view import *
 from .edit_recipe_view import *
+from .search_view import *
+
+

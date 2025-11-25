@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'partials/navbar.html' %}
+{% include 'partials/messages.html' %}
+{% block content %}
+
+<div class="container-fluid">
+
+    {% if page_obj and page_obj.object_list %}
+    <!-- Show recipes if there are any -->
+    <div class="row row-cols-3 row-cols-md-5 g-4">
+        {% for recipe in page_obj %}
+        {% include "partials/recipe_card.html" with recipe=recipe %}
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Footer -->
+    <footer class="text-center text-white mt-4 footer-colour">
+        <div class="container p-4 pb-1">
+            <section>
+                <p class="d-flex justify-content-center align-items-center">
+                    <span class="me-3 current">
+                        Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}
+                    </span>
+
+                    {% if page_obj.has_previous %}
+                    <a href="?search={{ query }}&page={{ page_obj.previous_page_number }}"
+                        class="btn btn-outline-light btn-rounded">
+                        Previous
+                    </a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <a href="?search={{ query }}&page={{ page_obj.next_page_number }}"
+                        class="btn btn-outline-light btn-rounded m-2">
+                        Show more
+                    </a>
+                    {% endif %}
+                </p>
+            </section>
+        </div>
+    </footer>
+
+    {% else %}
+    <!-- No recipes found -->
+    <p class="text-center mt-4">
+        No recipes found matching "{{ query }}."
+        <a href="{% url 'home' %}" class="btn btn-primary btn-sm ms-2">Go back home</a>
+    </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+{% endblock %}
