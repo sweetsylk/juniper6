@@ -28,11 +28,11 @@ urlpatterns = [
 
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/your_recipes/', views.UserRecipesView.as_view(), name='your_recipes'), 
-    path('dashboard/your_recipes/edit/<int:recipe_id>', views.EditRecipeView.as_view(), name='update_recipe'), 
+    path('dashboard/your_recipes/edit/<int:recipe_id>/', views.EditRecipeView.as_view(), name='update_recipe'), 
 
     path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
 
-    path('recipe/', views.RecipePage.as_view(), name='recipe'),
+    path('recipe/<int:recipe_id>/', views.RecipePage.as_view(), name='recipe'),
 
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),

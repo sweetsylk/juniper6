@@ -3,17 +3,28 @@
 <div class="container my-5">
     <!--top bar container-->
     <div class="text-center mb-4">
-        <h1 class="fw-bold">Lasagna</h1>
+        <h1 class="fw-bold">{{ recipe.title }}</h1>
         <p class="text-muted mb-1">
-            by <span class="fw-semibold">User's name</span> 4.5/5 (100 reviews)
+            by <span class="fw-semibold">{{recipe.author.username}}</span>
         </p>
+        {% if recipe.created_at %}
+        <p class="text-muted mb-0">Posted on {{ recipe.created_at|date:"F j, Y" }}</p>
+        {% endif %}
+
+        {% if recipe.tags %}
+        {% for tag in recipe.tags.all %}
+        <span class="badge bg-secondary">{{ tag.name }}</span>
+        {% endfor %}
+        {% endif %}
     </div>
 
     <!-- Image description of Recipe-->
     <div class="text-center mb-4">
-        <p>Description of the dish</p>
-        <img src="image-of-food.jpg" alt="image of recipe" class="img-fluid rounded shadow"
+        <p>{{recipe.description}}</p>
+        {% if recipe.image %}
+        <img src="{{recipe.image.url}}" alt="{{recipe.title}}" class="img-fluid rounded shadow"
             style="max-height: 400px; max-width: 800px; object-fit: cover;">
+        {% endif %}
     </div>
 
     <!-- Recipe Info (Time, Servings, Yield)-->
@@ -22,19 +33,12 @@
 
             <div class="border rounded p-3 shadow-sm bg-light">
                 <h5 class="text-muted mb-1">Prep Time</h5>
-                <p class="fw-semibold mb-0">30 minutes</p>
+                <p class="fw-semibold mb-0">{{ recipe.prep_time }} minutes</p>
             </div>
-            <div class="border rounded p-3 shadow-sm bg-light">
-                <h5 class="text-muted mb-1">Cook Time</h5>
-                <p class="fw-semibold mb-0">60 minutes</p>
-            </div>
-            <div class="border rounded p-3 shadow-sm bg-light">
-                <h5 class="text-muted mb-1">Total Time</h5>
-                <p class="fw-semibold mb-0">60 minutes</p>
-            </div>
+
             <div class="border rounded p-3 shadow-sm bg-light">
                 <h5 class="text-muted mb-1">Servings</h5>
-                <p class="fw-semibold mb-0">6</p>
+                <p class="fw-semibold mb-0">{{ recipe.servings }}</p>
             </div>
         </div>
     </div>
@@ -48,9 +52,18 @@
                 <div class="card-body">
                     <h3 class="card-title mb-3">Ingredients</h3>
                     <ul class="list-unstyled mb-0">
-                        <li>Pasta sheets</li>
-                        <li>Tomato sauce</li>
-                        <li>Mince meat</li>
+                        {% if recipe.instructions %}
+                        {% for ingredient in recipe.ingredients.all %}
+                        <li>
+                            {{ ingredient.name }}
+                            {% if ingredient.amount %} - {{ ingredient.amount }} {% endif %}
+                            {% if ingredient.unit %} {{ ingredient.unit }} {% endif %}
+
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <p>No ingredients available.</p>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -62,9 +75,15 @@
                 <div class="card-body">
                     <h3 class="card-title mb-3">Directions</h3>
                     <ol class="list-group list-group-numbered list-group-flush">
-                        <li class="list-group-item">Boil pasta sheets</li>
-                        <li class="list-group-item">Tomato sauce</li>
-                        <li class="list-group-item">Mince meat</li>
+                        {% if recipe.instructions %}
+                        {% for step in recipe.instructions.splitlines %}
+                        <li class="list-group-item">
+                            {{step}}
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <p>No instructions available.</p>
+                        {% endif %}
                     </ol>
                 </div>
             </div>
