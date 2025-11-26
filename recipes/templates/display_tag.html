@@ -32,13 +32,13 @@
                 <span class="me-3 current">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
 
                 {% if page_obj.has_previous %}
-                    <a href="{% url 'tag' tag=tag%}?page={{ page_obj.previous_page_number }}" class="btn btn-outline-light btn-rounded" >
+                    <a href="{% url 'display_tag' tag=tag%}?page={{ page_obj.previous_page_number }}" class="btn btn-outline-light btn-rounded" >
                     Previous
                     </a>
                 {%endif%}
 
                 {% if page_obj.has_next %}
-                    <a href="{% url 'tag' tag=tag%}?page={{ page_obj.next_page_number }}" class="btn btn-outline-light btn-rounded m-2">
+                    <a href="{% url 'display_tag' tag=tag%}?page={{ page_obj.next_page_number }}" class="btn btn-outline-light btn-rounded m-2">
                     Show more
                     </a>
                 {%endif%}

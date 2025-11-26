@@ -6,7 +6,7 @@ from django.urls import reverse
 from recipes.forms import PasswordForm
 
 
-class PasswordView(LoginRequiredMixin, FormView):
+class PasswordUpdateView(LoginRequiredMixin, FormView):
     """
     Allow authenticated users to change their password.
 
@@ -15,7 +15,7 @@ class PasswordView(LoginRequiredMixin, FormView):
     password update, the user is re-authenticated to maintain their session.
     """
 
-    template_name = 'password.html'
+    template_name = 'update_password.html'
     form_class = PasswordForm
 
     def get_form_kwargs(self, **kwargs):

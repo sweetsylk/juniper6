@@ -8,8 +8,8 @@ from django.db import transaction # Import transaction for data safety
 from recipes.forms import RecipeForm, IngredientFormSet 
 from recipes.models import Recipe 
 
-class CreateRecipeView(LoginRequiredMixin, CreateView):
-    template_name = 'create_recipe_page.html'
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    template_name = 'create_recipe.html'
     form_class = RecipeForm
     model = Recipe 
     

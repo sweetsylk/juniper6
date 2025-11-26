@@ -1,20 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from django.urls import reverse
 from recipes.forms import RecipeForm 
 from recipes.models import Recipe 
 
-class EditRecipeView(LoginRequiredMixin, CreateView):
-    """ ... """
-    template_name = 'edit_recipe_page.html'
+class RecipeUpdateView(LoginRequiredMixin, UpdateView):
+    """Update the given recipe"""
+    template_name = 'update_recipe.html'
     form_class = RecipeForm
     model = Recipe 
     
-    def form_valid(self, form):
-     
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+    def get_queryset(self):
+        """ensure only the author can update their own recipes"""
+        return Recipe.objects.filter(author=self.request.user)
 
     def get_success_url(self):
       

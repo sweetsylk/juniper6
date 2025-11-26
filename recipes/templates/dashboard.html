@@ -1,5 +1,10 @@
 {% extends 'base_content.html' %}
 {% block content %}
+
+<!--Display the logged in user's activity- the recipes they've made, drafed, liked, saved, rated, 
+    commented on, etc.
+    Could add option to make activity/specific activities public or private, -->
+
 <div class="container">
 
   <div class="row">
@@ -9,9 +14,11 @@
   </div>
 
   <div class="row">
-    <a href="{% url 'your_recipes' %}" class="btn btn-outline-secondary btn-rounded">View Recipes</a>
-    <a href="{% url 'profile_view' %}" class="btn btn-outline-secondary btn-rounded">View profile</a>
-    <a href="#" class="btn btn-outline-secondary btn-rounded">View saved</a>
+    <a href="{% url 'display_user_recipes' pk=0 %}" class="btn btn-outline-secondary btn-rounded">View your recipes</a>
+    <a href="{% url 'create_recipe' %}" class="btn btn-outline-secondary btn-rounded">Create new recipe</a>
+    <a href="#" class="btn btn-outline-secondary btn-rounded">View your saved recipes</a>
+    <a href="{% url 'display_user_profile' pk=0 %}" class="btn btn-outline-secondary btn-rounded">View your profile</a>
+
   </div>
 
 </div>

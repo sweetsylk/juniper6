@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-12">
       <h1>Edit profile</h1>
-      <form action="{% url 'profile' %}" method="post">
+      <form action="{% url 'update_profile' %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
         <input type="submit" value="Update" class="btn btn-primary">
@@ -14,7 +14,7 @@
   </div>
   <div class="row mt-3">
     <div class="col-2">
-      <a class="btn btn-primary" href="{% url 'password' %}">Edit Private Data</a>
+      <a class="btn btn-primary" href="{% url 'update_password' %}">Edit Private Data</a>
     </div>
   </div>
 </div>

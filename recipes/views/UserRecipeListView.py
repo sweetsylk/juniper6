@@ -3,18 +3,19 @@ from django.views.generic import DetailView, ListView
 from recipes.models import User
 from recipes.models import Recipe
 
-class UserRecipesView(LoginRequiredMixin, ListView):
-
+class UserRecipeListView(LoginRequiredMixin, ListView):
+    """
+    Return all of the given user's recipes
+    """
+    
     model = Recipe 
-    template_name = "your_recipes.html"
+    template_name = "user_recipes.html"
     context_object_name = "recipes"
     paginate_by = 50
 
     def get_recipes(self):
-        #Return all the logged-in user's recipes
-        return Recipe.objects.filter(author=self.request.user).order_by('-updated_at')
+        
+        return Recipe.objects.filter().order_by('-updated_at')
     
 
 
-class EditRecipeView():
-    pass

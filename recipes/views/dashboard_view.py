@@ -13,7 +13,7 @@ def dashboard(request):
     page.
 
     """
-    #This is essentially the user's profile page
+    
 
     current_user = request.user
     return render(request, 'dashboard.html', {'user': current_user})

@@ -1,0 +1,25 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<!-- Could include CRUD options here as well iff the user whose recipes we're displaying == the logged in user-->
+<div class="container">
+
+  <div class="row">
+    <div class="col-12">
+      <h1>Welcome to your Recipes {{ user.username }}</h1>
+    </div>
+  </div>
+  
+  <div class="row row-cols-3 row-cols-md-5 g-4 mt-1">
+    <div class="card mx-2">
+      <div class="card-body">
+        <h5 class="card-title">Recipe Name</h5>
+        <p class="card-text">Recipe Description and some other preview stuff, could add it's image here too</p>
+        <a href="#" class="btn btn-primary">View</a>
+        <a href="#" class="btn btn-primary">Update</a>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}

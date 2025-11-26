@@ -1,16 +1,23 @@
-from .dashboard_view import *
 from .home_view import *
+
 from .log_in_view import *
-from .log_out_view import *
-from .password_view import *
-from .profile_view import *
 from .sign_up_view import *
-from .recipe_page_view import *
-from .profile_view_only import * 
+from .log_out_view import *
+
+from .dashboard_view import *
+from .UserRecipeListView import *
+from .RecipeUpdateView import *
+
+from .PasswordUpdateView import *
+from .ProfileUpdateView import *
+
+from .display_recipe_view import *
+from .ProfileDetailView import * 
 from .create_recipe_view import *
-from .tags_view import *
-from .your_recipes_view import *
-from .edit_recipe_view import *
-from .search_view import *
+from .display_tag_view import *
+
+from .search_results_view import *
 
 
+def pass_(request):
+    pass
