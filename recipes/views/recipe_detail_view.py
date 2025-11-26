@@ -3,7 +3,7 @@ from django.views import View
 
 
 class RecipeDetailView(View):
-    """Display the recipe page"""
+    """Display a recipe"""
 
     def get(self, request):
         """Handle GET requests by displaying the recipe page"""

@@ -151,7 +151,3 @@ MESSAGE_TAGS = {
 }
 
 TAGGIT_CASE_INSENSITIVE = True # this just ensures that the tags dont care about casing (recipts)
-
-
-# CONFIGURATIONS
-CARDS_PER_PAGE = 50

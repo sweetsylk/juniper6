@@ -6,6 +6,14 @@
   border-radius: 0px;
 }
 
+/*
+ * Sticky-top navbar covers page content, hence:
+ */
+
+body {
+  padding-top: 72px;
+}
+
 
 /*
  * Cover page
@@ -37,7 +45,7 @@ p.cover-text {
 }
 
 .cover-card {
-  background-color: rgba(187, 19, 19, 0.6);
+  background-color: rgba(155, 152, 148, 0.6);
   max-width: 30rem;
   padding-top: 30px;
   padding-left: 50px;
@@ -178,7 +186,45 @@ h3.profile-title {
   line-clamp: 2;
 }
 
+
+/*
+ * welcome page
+ */
+
 .rc-img-format {
   height: 200px; 
+  object-fit: cover;
+}
+
+.carousel-inner img {
+    height: 500px;       /* Set the same height */
+    width: auto;         /* Maintain aspect ratio */
+    object-fit: cover;   /* Crop parts of the image if necessary */
+}
+
+
+.featurette-divider {
+  margin: 3rem 0; /* space above and below */
+  border: 0;
+  border-top: 1px solid #868686; /* thin light line */
+}
+
+.featurette-image {
+  width: 500px;
+  height: 500px;
+  object-fit: cover;
+}
+
+.big-font {
+    font-size: 50px; 
+}
+
+.medium-font {
+  font-size: 35
+}
+
+.img-small-circle {
+  width: 100px;
+  height: 100px;
   object-fit: cover;
 }

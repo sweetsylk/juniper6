@@ -1,8 +1,10 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-<!-- Display the logged in user's profile
-    Could add an option for them to modify what data is and isn't displayed on their dashboard -->
+<!-- Display a given user's profile
+    Could add an option for them to modify what data is and isn't displayed on their dashboard 
+    
+    Could incl CRUD options here as well iff the user whose recipes we're displaying == the logged in user -->
 
 <div class="container">
   <div class="row justify-content-center">
@@ -47,10 +49,13 @@
           <a href="#" class="btn btn-sm btn-outline-primary">
                 View Recipe
               </a>
+          <a href="#" class="btn btn-sm btn-outline-primary">
+                Update Recipe
+              </a>
             </div>
           {% endfor %}
         {% else %}
-          <p class="text-muted text-center">You haven't created any recipes yet.</p>
+          <p class="text-muted text-center">You haven"t created any recipes yet.</p>
         {% endif %}
       </div>
 

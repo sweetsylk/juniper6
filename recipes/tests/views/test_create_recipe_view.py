@@ -4,7 +4,7 @@ from django.urls import reverse
 from recipes.forms import RecipeForm
 from recipes.models import User, Recipe, RecipeIngredient
 
-class CreateRecipeViewTestCase(TestCase):
+class RecipeCreateViewTestCase(TestCase):
     # this to test the create recipe view
 
     fixtures = ['recipes/tests/fixtures/default_user.json']
@@ -36,13 +36,13 @@ class CreateRecipeViewTestCase(TestCase):
         }
 
     def test_create_recipe_url(self):
-        self.assertEqual(self.url, '/create_recipe/')
+        self.assertEqual(self.url, '/recipes/create/')
 
     def test_get_create_recipe(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'create_recipe_page.html')
+        self.assertTemplateUsed(response, 'create_recipe.html')
         
         form = response.context['form']
         self.assertTrue(isinstance(form, RecipeForm))
@@ -98,7 +98,7 @@ class CreateRecipeViewTestCase(TestCase):
         self.assertEqual(after_count, before_count)
         
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'create_recipe_page.html')
+        self.assertTemplateUsed(response, 'create_recipe.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, RecipeForm))
         self.assertTrue(form.errors)

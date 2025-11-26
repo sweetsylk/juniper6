@@ -11,7 +11,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     Allow authenticated users to view and update their profile information.
 
     This class-based view displays a user profile editing form and handles
-    updates to the authenticated user’s profile. Access is restricted to
+    updates to the authenticated user's profile. Access is restricted to
     logged-in users via `LoginRequiredMixin`.
     """
 
@@ -24,7 +24,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         Retrieve the user object to be edited.
 
         This ensures that users can only update their own profile, rather
-        than any other user’s data.
+        than any other user's data.
 
         Returns:
             User: The currently authenticated user instance.

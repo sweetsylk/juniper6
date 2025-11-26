@@ -3,7 +3,8 @@
 
 <!--Display the logged in user's activity- the recipes they've made, drafed, liked, saved, rated, 
     commented on, etc.
-    Could add option to make activity/specific activities public or private, -->
+    Could add option to make activity/specific activities public or private, like your
+    saves or ratings and reviews -->
 
 <div class="container">
 
@@ -14,10 +15,9 @@
   </div>
 
   <div class="row">
-    <a href="{% url 'display_user_recipes' pk=0 %}" class="btn btn-outline-secondary btn-rounded">View your recipes</a>
-    <a href="{% url 'create_recipe' %}" class="btn btn-outline-secondary btn-rounded">Create new recipe</a>
+    <a href="#" class="btn btn-outline-secondary btn-rounded">View your drafts</a>
     <a href="#" class="btn btn-outline-secondary btn-rounded">View your saved recipes</a>
-    <a href="{% url 'display_user_profile' pk=0 %}" class="btn btn-outline-secondary btn-rounded">View your profile</a>
+    <a href="#" class="btn btn-outline-secondary btn-rounded">View your reviews and ratings</a>
 
   </div>
 

@@ -5,15 +5,6 @@
   {% block content %}
   {% load static %}
 
-  <!--<div class="d-flex">
-    <div class="container bg-dark">
-      Container 1
-    </div>
-    <div class="container bg-success text-white p-3">
-      Container 2
-    </div>
-  </div> -->
-
   <div class="container-fluid">
 
     <div class="row row-cols-3 row-cols-md-5 g-4">
@@ -25,9 +16,9 @@
     </div>
 
     <footer class="text-center text-white mt-4 footer-colour">
-      <!-- Grid container -->
+
       <div class="container p-4 pb-1">
-        <!-- Section: CTA -->
+
         <section class="">
           <p class="d-flex justify-content-center align-items-center">
             <span class="me-3 current">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
@@ -45,9 +36,9 @@
             {%endif%}
           </p>
         </section>
-        <!-- Section: CTA -->
+
       </div>
-      <!-- Grid container -->
+      
     </footer>
 
 

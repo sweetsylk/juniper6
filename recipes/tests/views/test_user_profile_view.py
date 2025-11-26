@@ -27,12 +27,12 @@ class UserProfileViewTestCase(TestCase, LogInTester):
             status_code=302,
             target_status_code=200
         )
-    
+        
     def test_get_profile_view_logged_in(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profile_view.html')
+        self.assertTemplateUsed(response, 'user_profile.html')
         self.assertEqual(response.context['object'],self.user)
         self.assertEqual(response.context['profile_user'],self.user)
 
