@@ -34,15 +34,8 @@ def search_results(request):
 
         words = query.split()
 
-        # tags = re.findall(r'#(\S+)', query)
-        # normal_terms = re.sub(r'#\S+', '', query).split()
-
         tags = [word[1:].strip() for word in words if word.startswith('#')]
         normal_terms = [word.strip() for word in words if not word.startswith('#')]
-
-        # print(words)
-        print("normal terms: ", normal_terms)
-        print("tags: ", tags)
 
         # recipe filtering (start with all recipes)
         recipes = Recipe.objects.all()
