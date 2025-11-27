@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.db.models import Q
 from recipes.models import Recipe
+from taggit.models import Tag as TagModel
+
 
 def search_results(request):
     """
@@ -31,9 +33,14 @@ def search_results(request):
     if query:
 
         words = query.split()
+
+        # tags = re.findall(r'#(\S+)', query)
+        # normal_terms = re.sub(r'#\S+', '', query).split()
+
         tags = [word[1:].strip() for word in words if word.startswith('#')]
         normal_terms = [word.strip() for word in words if not word.startswith('#')]
 
+        # print(words)
         print("normal terms: ", normal_terms)
         print("tags: ", tags)
 
@@ -52,8 +59,15 @@ def search_results(request):
 
             recipes = recipes.filter(query_filter)
 
+                
         for tag in tags:
-            recipes = recipes.filter(tags__name__iexact=tag)
+            matching_tags = TagModel.objects.filter(name__iexact=tag)
+            if matching_tags.exists():
+                recipes = recipes.filter(tags__name__iexact=tag)
+
+            elif not normal_terms:
+                recipes = Recipe.objects.none()
+                break
 
 
         recipes = recipes.distinct().order_by('-created_at')
