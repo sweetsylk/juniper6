@@ -14,7 +14,6 @@
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
 
-        <li><a class="dropdown-item" href="{% url 'create_recipe' %}">Create</a></li>
         <li><a class="dropdown-item" href="#">Your profile</a></li>
 
         <li><hr class="dropdown-divider"></li>
@@ -22,19 +21,6 @@
         <li><a class="dropdown-item" href="{% url 'log_out' %}">Log out</a></li>
       </ul>
     </li>
-
-    {% else %}
-    {% if request.resolver_match.url_name != 'log_in' %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'log_in' %}">Log In</a>
-    </li>
-    {% endif %}
-
-    {% if request.resolver_match.url_name != 'sign_up' %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'sign_up' %}">Sign Up</a>
-    </li>
-    {% endif %}
 
     {% endif %}
 
