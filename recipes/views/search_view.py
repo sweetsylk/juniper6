@@ -5,7 +5,11 @@ from recipes.models import Recipe
 
 def search_results(request):
     """
-    Search recipes by title or author's username and display results with pagination.
+    Search recipes by title or author's username or tags and display results with pagination.
+    Supports multi word searches and multiple tags separated by hashtags (#)
+    Title, author search is done by OR logic, tags are done with AND logic
+    Title, author search supports both full phrase match and individual word match
+    Tags must match exactly to be included
 
     - This view searches the Recipe model based on the title field
     - It supports pagination to show 15 recipes per page.
@@ -25,11 +29,30 @@ def search_results(request):
     query = request.GET.get('search', '')
     
     if query:
-        recipes = Recipe.objects.filter(
-            Q(title__icontains=query) | Q(author__username__icontains=query)
-        ).order_by('-created_at')
+
+        words = query.split()
+        tags = [word[1:] for word in words if word.startswith('#')]
+        normal_terms = [word for word in words if not word.startswith('#')]
+
+        query_filter = Q()
+
+        if normal_terms:
+            # full search match
+            normal_query = " ".join(normal_terms)
+            query_filter |= Q(title__icontains=normal_query) | Q(author__username__icontains=normal_query)
+
+            # individual word match
+            for term in normal_terms:
+                query_filter |= Q(title__icontains=term) | Q(author__username__icontains=term)
+
+        if tags:
+            for tag in tags:
+                query_filter &= Q(tags__name__iexact=tag)
+
+
+        recipes = Recipe.objects.filter(query_filter).distinct().order_by('-created_at')
     else:
-        recipes = Recipe.objects.none()  # empty queryset if no query
+        recipes = Recipe.objects.none()  # empty querysetaif no query
 
     # Pagination
     paginator = Paginator(recipes, 15)  # 15 recipes per page
