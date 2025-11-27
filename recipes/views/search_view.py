@@ -31,13 +31,18 @@ def search_results(request):
     if query:
 
         words = query.split()
-        tags = [word[1:] for word in words if word.startswith('#')]
-        normal_terms = [word for word in words if not word.startswith('#')]
+        tags = [word[1:].strip() for word in words if word.startswith('#')]
+        normal_terms = [word.strip() for word in words if not word.startswith('#')]
 
-        query_filter = Q()
+        print("normal terms: ", normal_terms)
+        print("tags: ", tags)
+
+        # recipe filtering (start with all recipes)
+        recipes = Recipe.objects.all()
 
         if normal_terms:
             # full search match
+            query_filter = Q()
             normal_query = " ".join(normal_terms)
             query_filter |= Q(title__icontains=normal_query) | Q(author__username__icontains=normal_query)
 
@@ -45,12 +50,13 @@ def search_results(request):
             for term in normal_terms:
                 query_filter |= Q(title__icontains=term) | Q(author__username__icontains=term)
 
-        if tags:
-            for tag in tags:
-                query_filter &= Q(tags__name__iexact=tag)
+            recipes = recipes.filter(query_filter)
+
+        for tag in tags:
+            recipes = recipes.filter(tags__name__iexact=tag)
 
 
-        recipes = Recipe.objects.filter(query_filter).distinct().order_by('-created_at')
+        recipes = recipes.distinct().order_by('-created_at')
     else:
         recipes = Recipe.objects.none()  # empty querysetaif no query
 
