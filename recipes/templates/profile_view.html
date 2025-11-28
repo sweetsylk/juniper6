@@ -2,8 +2,10 @@
 {% block content %}
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-12">
 
+      <h1 class="text-center mt-4 mb-4">{{ profile_user.full_name }}</h1>
+      
       {% if profile_user.profile_image %}
         <img src="{{ profile_user.profile_image.url }}" 
             alt="Profile Picture"
@@ -15,10 +17,9 @@
             class="rounded-circle img-fluid d-block mx-auto mb-3 shadow"
             style="width: 150px; height: 150px; object-fit: cover;">
       {% endif %}
-
-      <div class="card p-4 shadow-sm mt-4">
-        <h2 class="text-center mb-3">{{ profile_user.full_name }}</h2>
-
+      
+      <div class="profile-card shadow-sm p-4 mx-auto text-center"
+        style="max-width: 600px; border-radius: 12px;">
         <p><strong>Username:</strong> {{ profile_user.username }}</p>
         <p><strong>Email:</strong> {{ profile_user.email }}</p>
         <p><strong>Member since:</strong> {{ profile_user.date_joined|date:"F j, Y" }}</p>
@@ -26,38 +27,58 @@
       </div>
 
       {% if request.user == profile_user%}
-      <div class="mt-4 text-center">
-        <a href="{% url 'profile' %}" class="btn btn-primary me-2">Edit Profile</a>
-        <a href="{% url 'create_recipe' %}" class="btn btn-primary me-2">Create Recipe</a>
-      </div>
+        <div class="d-flex justify-content-center gap-3 mt-3">
+
+          <a href="{% url 'profile' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+          </svg>
+          Edit Profile
+      </a>
+
+      <a href="{% url 'create_recipe' %}" class="btn btn-outline-success d-flex align-items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+          </svg>
+          Create Recipe
+      </a>
+      
+
+        </div>
       {% endif %}
       
-      <hr class="my-4">
       {% if user_recipes %}
-        {% for recipe in user_recipes %}
-        <div class="mb-3 p-3 border rounder">
-          <h4>{{ recipe.title }}</h4>
-          <p class="text-muted">
-            {{ recipe.description|truncatewords:20}}
-          </p>
-          {% if recipe.image %}
-                <img src="{{ recipe.image.url }}"
-                     class="img-fluid rounded mb-2"
-                     style="max-height: 150px;">
-          {% endif %}
+      <hr class="my-5">
 
-          <p><strong>Prep Time:</strong>{{ recipe.prep_time }} mins</p>
-          <p><strong>Servings:</strong>{{ recipe.servings }}</p>
-          
-          <a href="#" class="btn btn-sm btn-outline-primary">
-                View Recipe
-              </a>
+      <h3 class="text-center mb-4">My Recipes</h3>
+
+      <div class="list-group">
+
+        {% for recipe in user_recipes %}
+        <a href="{% url 'recipe' %}?id={{ recipe.id }}" 
+            class="list-group-item list-group-item-action py-3 mb-3 rounded shadow-sm">
+        <div class="d-flex align-items-center">
+
+            {% if recipe.image %}
+            <img src ="{{ recipe.image.url }}" class="rounded me-3" style="width: 90px; height: 90px; object-fit: cover;">
+            {% endif %}
+
+            <div class="flex-grow-1">
+              <h5 class="mb-1">{{ recipe.title }}</h5>
+              <p class="text-muted mb-1">{{ recipe.description|truncatewords:20 }}</p>
+                <div class="small text-muted">
+                  Prep: {{ recipe.prep_time }} mins • Servings: {{ recipe.servings }}
+                </div>
+              </div>
             </div>
+
+          </a>
           {% endfor %}
+        </div>
+          
         {% else %}
           <p class="text-muted text-center">You haven’t created any recipes yet.</p>
         {% endif %}
-      </div>
 
     </div>
   </div>
