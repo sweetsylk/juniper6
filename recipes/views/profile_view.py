@@ -2,8 +2,10 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
+from django.shortcuts import redirect
 from django.urls import reverse
 from recipes.forms import UserForm
+from recipes.models import User
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -15,7 +17,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     logged-in users via `LoginRequiredMixin`.
     """
 
-    model = UserForm
+    model = User
     template_name = "profile.html"
     form_class = UserForm
 
@@ -31,16 +33,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """
         user = self.request.user
         return user
-
-    def get_success_url(self):
+    
+    def form_valid(self, form):
         """
-        Determine the redirect URL after a successful profile update.
-
-        Also adds a success message to inform the user that their profile
-        was successfully updated.
-
-        Returns:
-            str: The URL to redirect to (typically the dashboard or user home).
+        Save updated profile (including uploaded image) and redirect.
         """
-        messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+        form.save()
+        messages.success(self.request, "Profile updated!")
+        return redirect(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+    

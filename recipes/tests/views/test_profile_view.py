@@ -5,6 +5,7 @@ from django.urls import reverse
 from recipes.forms import UserForm
 from recipes.models import User
 from recipes.tests.helpers import reverse_with_next
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class ProfileViewTest(TestCase):
     """Test suite for the profile view."""
