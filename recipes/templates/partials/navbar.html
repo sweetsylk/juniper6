@@ -2,11 +2,11 @@
 
   <button class="btn custom" data-bs-toggle="offcanvas" data-bs-target="#sidebar"><i class="bi bi-justify" style="padding-left: 20px; color:azure;" ></i></button>
 
-  <div class="container d-flex justify-content-between align-items-center">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
 
     <!--format the Brand Logo in the navbar-->
     <a class="navbar-brand" 
-    href="{% if request.user.is_authenticated %}{% url 'home' %}{% else %}{% url 'welcome' %}{% endif %}">
+    href="{% url 'explore' %}">
       Recipify
     </a>
 
@@ -14,8 +14,6 @@
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-
 
     {% include "partials/search_bar.html" %}
     {% include 'partials/menu.html' %}

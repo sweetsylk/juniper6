@@ -23,12 +23,12 @@ from recipes import views
 urlpatterns = [
     path('admin/', admin.site.urls), 
 
-    path('', views.welcome, name='welcome'),
+    path('', views.home, name='home'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
 
-    path('home/', views.home, name='home'),
+    path('explore/', views.explore, name='explore'),
     path('search/', views.search_results, name='search_results'),
 
     path('dashboard/', views.dashboard, name='dashboard'), 
