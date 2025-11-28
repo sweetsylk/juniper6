@@ -27,8 +27,8 @@ class MenuTesterMixin(AssertHTMLMixin):
         """Check that menu is present."""
 
         for url in self.menu_urls:
-            with self.assertHTML(response, f'a[href="{url}"]'):
-                pass
+            self.assertHTML(response, f'a[href="{url}"]')
+
 
     def assert_no_menu(self, response):
         """Check that no menu is present."""
