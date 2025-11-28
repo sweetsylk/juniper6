@@ -267,3 +267,13 @@ h3.profile-title {
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
+
+
+
+
+/* Custom Button Colour*/
+.my-custom-btn {
+  background-color: #8a2be2; /* custom colour (purple example) */
+  color: white;             /* text colour */
+  border: none;             /* removes default border */
+}
