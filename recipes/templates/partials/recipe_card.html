@@ -9,7 +9,14 @@
     {% endif %}
     <div class="card-body d-flex flex-column recipe-card-clamp">
       <h5 class="card-title"><a class="link dark-link" href="{% url 'recipe' %}">{{ recipe.title }}</a></h5>
-      <h7 class="card-title"><a class="link grey-link" href="{% url 'profile_view' %}">{{ recipe.author }}</a></h7>
+
+      <p class="card-author"> 
+        <a class="link grey-link"
+            href="{% url 'user_profile' recipe.author.username %}">
+            {{ recipe.author.username }}
+          </a>
+      </p>
+
       <p class="card-text fs-14 description-clamp">{{ recipe.description }}</p>
       <p class="card-text mt-auto tag-clamp"><small class="text-muted">
         {% for tag in recipe.tags.all %}
