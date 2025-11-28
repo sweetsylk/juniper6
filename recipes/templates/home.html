@@ -5,9 +5,15 @@
   {% block content %}
   {% load static %}
 
-  <div class="container-fluid">
+  <div class="container-fluid min-vh-100">
 
-    <div class="row row-cols-3 row-cols-md-5 g-4">
+    <div class="row
+                row-cols-1
+                row-cols-2 
+                row-cols-md-3
+                row-cols-lg-4
+                row-cols-xl-5
+                g-4">
 
       {% for recipe in page_obj %}
         {% include "partials/recipe_card.html" with recipe=recipe %}
@@ -20,7 +26,7 @@
       <div class="container p-4 pb-1">
 
         <section class="">
-          <p class="d-flex justify-content-center align-items-center">
+          <p class="d-flex justify-content-center align-items-center ">
             <span class="me-3 current">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
 
             {% if page_obj.has_previous %}

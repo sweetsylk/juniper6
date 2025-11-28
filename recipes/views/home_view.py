@@ -9,7 +9,7 @@ from recipes.models import Recipe
 def home(request):
     """Display home page, which shows x number of most recent recipes from db."""
 
-    cards_per_page = 50
+    cards_per_page = 100
     #could add functionality to let user set this value using ?cpp= and cards_per_page = request.GET.get("cpp")
     
     p = Paginator(Recipe.objects.order_by('-created_at'), cards_per_page)
