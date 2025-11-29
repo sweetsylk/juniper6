@@ -53,7 +53,14 @@
       <hr class="my-5">
 
       <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="m-0">My Recipes</h3>
+          
+          <h3 class="m-0">
+            {% if request.user == profile_user %}
+              My Recipes
+            {% else %}
+              {{ profile_user.full_name|default:profile_user.username }}'s Recipes
+            {% endif %}
+          </h3>
 
           {% if request.user == profile_user %}
           <a href="{% url 'create_recipe' %}"
