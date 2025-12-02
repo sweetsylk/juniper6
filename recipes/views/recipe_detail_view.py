@@ -7,9 +7,9 @@ from recipes.models.recipe import Recipe
 class RecipeDetailView(View):
     """Display a recipe"""
 
-    def get(self, request, recipe_id):
+    def get(self, request, pk):
         """Handle GET requests by displaying the recipe page"""
 
-        recipe = get_object_or_404(Recipe, id=recipe_id)
+        recipe = get_object_or_404(Recipe, pk=pk)
 
-        return render(request, 'recipe.html', {"recipe": recipe})
+        return render(request, 'display_recipe.html', {"recipe": recipe})

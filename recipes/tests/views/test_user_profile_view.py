@@ -14,7 +14,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
 
     def setUp(self):
         self.user = User.objects.get(username='@johndoe')
-        self.url = reverse('profile_view')
+        self.url = reverse('display_user_profile')
 
     def test_profile_url(self):
         self.assertEqual(self.url, '/profile/view/')

@@ -3,12 +3,12 @@ from django.views.generic import DetailView
 from django.shortcuts import get_object_or_404
 from recipes.models import User, Recipe
 
-class UserProfileView(LoginRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     """
     Displays a user's profile page.
     """
     model = User 
-    template_name = "profile_view.html"
+    template_name = "display_user_profile.html"
     context_object_name = "profile_user"
 
     def get_object(self):

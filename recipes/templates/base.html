@@ -21,7 +21,7 @@
       </div>
       <div class="offcanvas-body">
     
-
+      {% if user.is_anonymous %}
         {% if request.resolver_match.url_name != 'log_in' %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'log_in' %}">Log In</a>
@@ -33,8 +33,7 @@
           <a class="nav-link" href="{% url 'sign_up' %}">Sign Up</a>
         </li>
         {% endif %}
-    
-
+      {% endif %}
         
         <li class="nav-item"><a href="http://127.0.0.1:8000/">Home</a></li>
         <li class="nav-item"><a href="{% url 'explore' %}">Explore</a></li>

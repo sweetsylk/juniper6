@@ -42,7 +42,7 @@ class DeleteRecipeViewTestCase(TestCase):
         after_count = Recipe.objects.count()
 
         self.assertEqual(after_count, before_count-1)
-        self.assertRedirects(response, reverse('profile_view'))
+        self.assertRedirects(response, reverse('display_user_profile'))
 
         messages_list = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages_list), 1)
@@ -56,7 +56,7 @@ class DeleteRecipeViewTestCase(TestCase):
         after_count = Recipe.objects.count()
 
         self.assertEqual(after_count, before_count)
-        self.assertRedirects(response, reverse('profile_view'))
+        self.assertRedirects(response, reverse('display_user_profile'))
 
         messages_list = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages_list), 1)

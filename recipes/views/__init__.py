@@ -12,6 +12,7 @@ from .profile_detail_view import *
 from .recipe_create_view import *
 from .tag_lookup import *
 from .search_results_view import *
+from .recipe_delete_view import *
 
 
 def pass_(request):

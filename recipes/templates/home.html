@@ -38,9 +38,11 @@
     <div class="row align-items-center pt-5 pb-2">
       <h1 class="featurette-heading big-font">Recipify</h1>
       <h2 class="text-muted"><small>A project by Team Juniper 6</small></h2>
-      <a href="{% url 'log_in' %}" class="btn btn-outline-secondary btn-rounded col-1 mx-1">Log in</a>
-      <a href="{% url 'sign_up' %}" class="btn btn-outline-secondary btn-rounded col-1 mx-1">Sign up</a>
-    </div>
+      {% if user.is_anonymous %}
+        <a href="{% url 'log_in' %}" class="btn btn-outline-secondary btn-rounded col-1 mx-1">Log in</a>
+        <a href="{% url 'sign_up' %}" class="btn btn-outline-secondary btn-rounded col-1 mx-1">Sign up</a>
+      {% endif %}
+      </div>
 
     <div class="row justify-content-center align-items-center">
       <div class="col-4 d-flex">
@@ -81,7 +83,7 @@
               felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce 
               dapibus, tellus ac cursus commodo.
             </p>
-            <a href="{% url 'home' %}" class="btn btn-outline-secondary">See more >></a>
+            <a href="{% url 'explore' %}" class="btn btn-outline-secondary">See more >></a>
           </div>
         </div>
       </div>
@@ -147,8 +149,10 @@
   <div class="container my-5">
     
     <footer class="container">
-      <span class="me-3">Don't miss out- Register for free today</span><a href="{% url 'sign_up' %}" 
-      class="btn btn-outline-secondary btn-rounded">Sign up!</a>
+      {% if user.is_anonymous %}
+        <span class="me-3">Don't miss out- Register for free today</span>
+          <a href="{% url 'sign_up' %}" class="btn btn-outline-secondary btn-rounded">Sign up!</a>
+      {% endif %}
     </footer>
     
   </div>

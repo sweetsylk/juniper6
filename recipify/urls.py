@@ -19,7 +19,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from recipes import views
-from recipes.views.delete_recipe import DeleteRecipeView
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
@@ -31,7 +30,6 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
 
     path('explore/', views.explore, name='explore'),
-
     path('search/', views.search_results, name='search_results'),
 
     path('dashboard/', views.dashboard, name='dashboard'), 
@@ -41,19 +39,18 @@ urlpatterns = [
     path('settings/password/', views.PasswordUpdateView.as_view(), name='update_password'),
     path('settings/filters/', views.pass_, name='update_filters'), 
 
-    path('profile/view/', views.ProfileDetailView.as_view(), name='profile_view'),
-    #path('users/<int:pk>/', views.ProfileDetailView.as_view(), name='display_user_profile'), 
+    #path('users/user', views.ProfileDetailView.as_view(), name='display_user_profile'),
+    path('users/<str:username>', views.ProfileDetailView.as_view(), name='display_user_profile'),
     path('users/<int:pk>/recipes/', views.pass_, name='display_user_recipes'),
     path('users/<int:pk>/saves/', views.pass_, name='display_saved_recipes'), 
     path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
 
-    path('profile/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
+    path('profile/<str:username>/', views.ProfileDetailView.as_view(), name='user_profile'),
 
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
-    #path('recipe/<int:recipe_id>/', views.RecipePage.as_view(), name='recipe'),
-    path('recipes/<int:recipe_id>/', views.RecipeDetailView.as_view(), name='display_recipe'),
+    path('recipes/<int:pk>', views.RecipeDetailView.as_view(), name='display_recipe'),
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
-    path('recipes/<int:pk>/delete/', views.pass_, name='delete_recipe'),
+    path('recipes/<int:pk>/delete/', views.RecipeDeleteView.as_view(), name='delete_recipe'),
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 
     #tags can have spaces in them, so also need to edit Recipe model to use slugs for them
@@ -63,9 +60,6 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 """
-tried to make the 'profile_view' path into 'display_user_profile' but can't until 
-profile_view is implimented, as it may not use pk at all, i was just estimating based on
-the guidelines
 
 could impliment 'drafts' to let users store draft recipies
 could impliment 'update_filters' to let users make 'permanant' tag filters

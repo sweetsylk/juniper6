@@ -7,19 +7,19 @@ from django.contrib.auth.decorators import login_required
 
 
 @method_decorator(login_required, name='dispatch')
-class DeleteRecipeView(View):
+class RecipeDeleteView(View):
     """Handles deleting a recipe owned by the logged-in user."""
     
-    def post(self, request, recipe_id):
+    def post(self, request, pk):
         # Fetch the recipe or return 404 if it doesn't exist
-        recipe = get_object_or_404(Recipe, id=recipe_id)
+        recipe = get_object_or_404(Recipe, pk=pk)
 
         # Check permissions 
         if(recipe.author != request.user):
             messages.error(request,"You are not allowed to delete this recipe.")
-            return redirect('profile_view')
+            return redirect('display_user_profile')
         
         # Delete the recipe
         recipe.delete()
         messages.success(request, "Recipe deleted successfully.")
-        return redirect('profile_view')
+        return redirect('display_user_profile')

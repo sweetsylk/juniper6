@@ -33,13 +33,10 @@
       </div>
 
       
-      <div class="mt-4 text-center">
-        <a href="{% url 'update_profile' %}" class="btn btn-primary me-2">Edit Profile</a>
-         <a href="{% url 'create_recipe' %}" class="btn btn-primary me-2">Create Recipe</a>
       {% if request.user == profile_user %}
       <div class="d-flex justify-content-center gap-3 mt-3">
 
-        <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+        <a href="{% url 'display_user_profile' user.username %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                fill="currentColor" class="bi bi-pencil-fill"
                viewBox="0 0 16 16">
@@ -64,16 +61,6 @@
 
       <div class="d-flex justify-content-between align-items-center mb-4">
           
-          <a href="#" class="btn btn-sm btn-outline-primary">
-                View Recipe
-              </a>
-          <a href="#" class="btn btn-sm btn-outline-primary">
-                Update Recipe
-              </a>
-            </div>
-          {% endfor %}
-        {% else %}
-          <p class="text-muted text-center">You haven"t created any recipes yet.</p>
           <h3 class="m-0">
             {% if request.user == profile_user %}
               My Recipes
@@ -111,7 +98,8 @@
 
       <div class="ms-3 d-flex align-items-center">
 
-        <a href="{% url 'update_recipe' %}?id={{ recipe.id }}" 
+        <a href="{% url 'display_recipe' recipe.pk %}"
+
            class="link-secondary me-3">
           <i class="bi bi-eye-fill fs-5"></i>
         </a>
@@ -119,14 +107,15 @@
         {% if request.user == profile_user %}
         <div class="vr me-3"></div>
 
-        <a href="{% url 'update_recipe' recipe_id=recipe.id %}" 
+        <a href="{% url 'update_recipe' recipe.pk %}" 
            class="link-secondary me-3">
           <i class="bi bi-pencil-fill fs-5"></i>
-        </a>
+        </a> 
+        <!--Generic detail views must be called with either an object pk or a slug in the URLconf.-->
 
         <div class="vr me-3"></div>
 
-        <form action="{% url 'delete_recipe' recipe_id=recipe.id %}" method="post" class="d-inline">
+        <form action="{% url 'delete_recipe' recipe.pk %}" method="post" class="d-inline">
           {% csrf_token %}
           <button type="submit" class="btn btn-link link-danger p-0 m-0">
             <i class="bi bi-trash fs-5"></i>
