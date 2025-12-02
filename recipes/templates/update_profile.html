@@ -10,7 +10,7 @@
 
       <div class="shadow-sm p-4 rounded" style="background: #ffffff;">
 
-      <form action="{% url 'display_user_profile' %}" method="post" enctype="multipart/form-data">
+      <form action="{% url 'update_profile' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
 

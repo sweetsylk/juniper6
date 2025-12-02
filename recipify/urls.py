@@ -51,16 +51,7 @@ urlpatterns = [
     path('recipes/<int:pk>/delete/', views.RecipeDeleteView.as_view(), name='delete_recipe'),
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 
-    #tags can have spaces in them, so also need to edit Recipe model to use slugs for them
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-"""
-
-could impliment 'drafts' to let users store draft recipies
-could impliment 'update_filters' to let users make 'permanant' tag filters
-could impliment 'display_saved_recipes' to let users save recipes into folders
-could impliment 'display_reviewed_recipes' to let users leave ratings and reviews
-"""
