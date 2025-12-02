@@ -10,7 +10,7 @@
       <h5 class="card-title"><a class="link dark-link" href="{% url 'display_recipe' recipe.pk %}">{{ recipe.title }}</a></h5>
       <p class="card-author"> 
         <a class="link grey-link"
-            href="{% url 'user_profile' recipe.author.username %}">
+            href="{% url 'display_user_profile' recipe.author.username %}">
             {{ recipe.author.username }}
           </a>
       </p>

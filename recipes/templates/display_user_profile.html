@@ -36,7 +36,7 @@
       {% if request.user == profile_user %}
       <div class="d-flex justify-content-center gap-3 mt-3">
 
-        <a href="{% url 'display_user_profile' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+        <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                fill="currentColor" class="bi bi-pencil-fill"
                viewBox="0 0 16 16">
@@ -110,8 +110,7 @@
         <a href="{% url 'update_recipe' recipe.pk %}" 
            class="link-secondary me-3">
           <i class="bi bi-pencil-fill fs-5"></i>
-        </a> 
-        <!--Generic detail views must be called with either an object pk or a slug in the URLconf.-->
+        </a>
 
         <div class="vr me-3"></div>
 

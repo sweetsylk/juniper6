@@ -16,11 +16,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     updates to the authenticated user's profile. Access is restricted to
     logged-in users via `LoginRequiredMixin`.
     """
-
-    model = UserForm
-    template_name = "update_profile.html"
+    
     model = User
-    template_name = "display_user_profile.html"
+    template_name = "update_profile.html"
     form_class = UserForm
 
     def get_object(self):

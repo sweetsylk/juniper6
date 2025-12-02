@@ -45,8 +45,6 @@ urlpatterns = [
     path('users/<int:pk>/saves/', views.pass_, name='display_saved_recipes'), 
     path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
 
-    path('profile/<str:username>/', views.ProfileDetailView.as_view(), name='user_profile'),
-
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='display_recipe'),
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
