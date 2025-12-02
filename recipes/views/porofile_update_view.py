@@ -20,7 +20,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserForm
     template_name = "update_profile.html"
     model = User
-    template_name = "profile.html"
+    template_name = "display_user_profile.html"
     form_class = UserForm
 
     def get_object(self):

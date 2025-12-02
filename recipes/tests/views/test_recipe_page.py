@@ -40,7 +40,7 @@ class RecipePageViewTests(TestCase):
         """
         Test that the recipe page loads successfully with correct content.
         """
-        url = reverse('recipe', args=[self.recipe.id])
+        url = reverse('display_recipe', args=[self.recipe.id])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -51,7 +51,7 @@ class RecipePageViewTests(TestCase):
         """
         The recipe page should show ingredient names and amounts.
         """
-        url = reverse('recipe', args=[self.recipe.id])
+        url = reverse('display_recipe', args=[self.recipe.id])
         response = self.client.get(url)
 
         self.assertContains(response, "Beef")
@@ -65,7 +65,7 @@ class RecipePageViewTests(TestCase):
         """
         Instructions split by lines should be shown as steps.
         """
-        url = reverse('recipe', args=[self.recipe.id])
+        url = reverse('display_recipe', args=[self.recipe.id])
         response = self.client.get(url)
 
         self.assertContains(response, "Step 1")
@@ -76,7 +76,7 @@ class RecipePageViewTests(TestCase):
         """
         A nonexistent recipe ID should return a 404.
         """
-        url = reverse('recipe', args=[999999])
+        url = reverse('display_recipe', args=[999999])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)

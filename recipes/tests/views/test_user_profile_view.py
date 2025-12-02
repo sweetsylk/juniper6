@@ -17,7 +17,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
         self.url = reverse('display_user_profile')
 
     def test_profile_url(self):
-        self.assertEqual(self.url, '/profile/view/')
+        self.assertEqual(self.url, '/users/user/')
 
     def test_get_profile_view_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('log_in',self.url)
@@ -33,7 +33,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'user_profile.html')
+        self.assertTemplateUsed(response, 'display_user_profile.html')
         self.assertEqual(response.context['object'],self.user)
         self.assertEqual(response.context['profile_user'],self.user)
 
@@ -87,7 +87,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
 
     def test_can_view_other_profile(self):
         other_user = User.objects.get(username='@janedoe')
-        url = reverse('user_profile', kwargs={'username': other_user.username})
+        url = reverse('display_user_profile', kwargs={'username': other_user.username})
         
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(url)
@@ -98,7 +98,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
     def test_view_profile_404_when_user_not_found(self):
         self.client.login(username=self.user.username, password='Password123')
 
-        url = reverse('user_profile', kwargs={'username': 'nonexistent'})
+        url = reverse('display_user_profile', kwargs={'username': 'nonexistent'})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)

@@ -103,12 +103,12 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
         self.assert_menu(response)
 
     def test_succesful_log_in_with_redirect(self):
-        redirect_url = reverse('update_profile')
+        redirect_url = reverse('display_user_profile')
         form_input = { 'username': '@johndoe', 'password': 'Password123', 'next': redirect_url }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'update_profile.html')
+        self.assertTemplateUsed(response, 'display_user_profile.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
 

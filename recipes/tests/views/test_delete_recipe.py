@@ -24,10 +24,10 @@ class DeleteRecipeViewTestCase(TestCase):
             instructions="Test"
         )
 
-        self.url = reverse('delete_recipe', kwargs={'recipe_id': self.recipe.id})
+        self.url = reverse('delete_recipe', kwargs={'pk': self.recipe.pk})
 
     def test_delete_recipe_url(self):
-        expected_url = f'/dashboard/your_recipes/delete/{self.recipe.id}'
+        expected_url = f'/recipes/{self.recipe.pk}/delete/'
         self.assertEqual(self.url, expected_url)
 
     def test_post_redirects_if_not_logged_in(self):
