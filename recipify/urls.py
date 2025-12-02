@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from recipes import views
+from recipes.views.delete_recipe import DeleteRecipeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +30,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/your_recipes/', views.UserRecipesView.as_view(), name='your_recipes'), 
     path('dashboard/your_recipes/edit/<int:recipe_id>', views.EditRecipeView.as_view(), name='update_recipe'), 
-
+    path('dashboard/your_recipes/delete/<int:recipe_id>', DeleteRecipeView.as_view(), name='delete_recipe'), 
     path('create_recipe/', views.CreateRecipeView.as_view(), name='create_recipe'),
 
     path('recipe/', views.RecipePage.as_view(), name='recipe'),
@@ -41,6 +42,7 @@ urlpatterns = [
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('profile/view/', views.UserProfileView.as_view(), name='profile_view'),
+    path('profile/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
     path('search/', views.search_results, name='search_results'),
 
 ]

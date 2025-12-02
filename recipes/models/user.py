@@ -18,6 +18,11 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
 
+    profile_image = models.ImageField(
+        upload_to='profile_pics/',
+        blank=True,
+        null=True
+    )
 
     class Meta:
         """Model options."""
@@ -28,14 +33,22 @@ class User(AbstractUser):
         """Return a string containing the user's full name."""
 
         return f'{self.first_name} {self.last_name}'
-
+    
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
 
         gravatar_object = Gravatar(self.email)
         gravatar_url = gravatar_object.get_image(size=size, default='mp')
         return gravatar_url
+    
+    @property
+    def gravatar_url(self):
+        """Return a URL to the user's gravatar."""
 
+        gravatar_object = Gravatar(self.email)
+        gravatar_url = gravatar_object.get_image(size=150, default='retro')
+        return gravatar_url
+    
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         
