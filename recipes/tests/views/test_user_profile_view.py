@@ -5,7 +5,8 @@ from recipes.tests.helpers import reverse_with_next
 from recipes.tests.helpers import LogInTester
 
 class UserProfileViewTestCase(TestCase, LogInTester):
-    
+    """ Test suite for the password view. """
+
     fixtures = [
         'recipes/tests/fixtures/default_user.json',
         'recipes/tests/fixtures/other_users.json'
@@ -83,3 +84,21 @@ class UserProfileViewTestCase(TestCase, LogInTester):
         self.client.login(username=self.user.username, password="Password123")
         response = self.client.get(self.url)
         self.assertEqual(response.context['date_joined'], self.user.date_joined)
+
+    def test_can_view_other_profile(self):
+        other_user = User.objects.get(username='@janedoe')
+        url = reverse('user_profile', kwargs={'username': other_user.username})
+        
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['profile_user'], other_user)
+
+    def test_view_profile_404_when_user_not_found(self):
+        self.client.login(username=self.user.username, password='Password123')
+
+        url = reverse('user_profile', kwargs={'username': 'nonexistent'})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)

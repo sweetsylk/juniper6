@@ -19,16 +19,19 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from recipes import views
+from recipes.views.delete_recipe import DeleteRecipeView
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
 
     path('', views.home, name='home'),
+
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
 
     path('explore/', views.explore, name='explore'),
+
     path('search/', views.search_results, name='search_results'),
 
     path('dashboard/', views.dashboard, name='dashboard'), 
@@ -44,8 +47,11 @@ urlpatterns = [
     path('users/<int:pk>/saves/', views.pass_, name='display_saved_recipes'), 
     path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
 
+    path('profile/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
+
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
-    path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='display_recipe'),
+    #path('recipe/<int:recipe_id>/', views.RecipePage.as_view(), name='recipe'),
+    path('recipes/<int:recipe_id>/', views.RecipeDetailView.as_view(), name='display_recipe'),
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipes/<int:pk>/delete/', views.pass_, name='delete_recipe'),
 
