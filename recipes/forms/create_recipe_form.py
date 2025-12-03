@@ -1,6 +1,9 @@
 from django import forms
 from django.forms import inlineformset_factory
 from ..models import Recipe, RecipeIngredient
+"""
+This is the form for creating a recipe that is on the create_recipe.html page
+"""
 
 class RecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
@@ -22,7 +25,7 @@ class RecipeForm(forms.ModelForm):
             'image'
         ]
        
-
+# this is the Ingredient form specifically in which a user can put their ingredient in
 class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
@@ -46,6 +49,6 @@ IngredientFormSet = inlineformset_factory(
     Recipe,                 
     RecipeIngredient,       
     form=RecipeIngredientForm, 
-    extra=5,     
+    extra=1,     
     can_delete=True         
 )       
