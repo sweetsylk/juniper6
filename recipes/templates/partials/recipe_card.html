@@ -9,19 +9,21 @@
 
 
 
+    {% if user.is_authenticated %}
     <form action="{% url 'save_unsave_recipe' recipe.pk %}" method="post"
       class="position-absolute top-0 end-0 m-2 d-flex align-items-center justify-content-center">
       {% csrf_token %}
       <input type="hidden" name="current_page" value="{{ request.get_full_path }}">
       <button type="submit" class="save-btn border-0 bg-white d-flex align-items-center justify-content-center"
         style="width: 40px; height: 40px; border-radius: 50%;">
-        {% if user.is_authenticated and user in recipe.saved_by.all %}
+        {% if user in recipe.saved_by.all %}
         <i class="bi bi-bookmark-fill text-secondary"></i>
         {% else %}
         <i class="bi bi-bookmark"></i>
         {% endif %}
       </button>
     </form>
+    {% endif %}
 
 
     <div class="card-body d-flex flex-column recipe-card-clamp">
