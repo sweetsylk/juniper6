@@ -130,7 +130,6 @@
 {% endfor %}
 </div>
 
-
       {% else %}
         <p class="text-muted text-center">You haven’t created any recipes yet.</p>
       {% endif %}
@@ -169,7 +168,6 @@
           </p>
           {% endif %}
 
-
           <small class="text-muted">
             Reviewed on {{ review.created_at|date:"F j, Y" }}
           </small>
@@ -185,13 +183,14 @@
         </div>
       </div>
           {% endfor %}
-          </div>
+      </div>
 
-          {% else %}
-            <p class="text_muted">No reviews yet.</p>
-          {% endif %}
+      {% else %}
+        <p class="text_muted">No reviews yet.</p>
+      {% endif %}
 
     </div>
   </div>
 </div>
+
 {% endblock %}

@@ -23,6 +23,7 @@ class CreateRecipeReviewView(LoginRequiredMixin, View):
                 defaults={'rating': rating,'comment': comment}
             )
 
+            # Feedback message
             if created:
                 messages.success(request, "Your review has been added!")
             else:
