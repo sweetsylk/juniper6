@@ -42,13 +42,13 @@ urlpatterns = [
     path('users/user/', views.ProfileDetailView.as_view(), name='display_user_profile'),
     path('users/<str:username>/', views.ProfileDetailView.as_view(), name='display_user_profile'),
     path('users/<int:pk>/recipes/', views.pass_, name='display_user_recipes'),
-    path('users/<int:pk>/saves/', views.pass_, name='display_saved_recipes'), 
     path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
 
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='display_recipe'),
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipes/<int:pk>/delete/', views.RecipeDeleteView.as_view(), name='delete_recipe'),
+    path('recipes/<int:pk>/save/', views.SaveUnsaveRecipeView.as_view(), name='save_unsave_recipe'),
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 
 ]
