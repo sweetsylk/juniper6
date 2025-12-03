@@ -15,7 +15,7 @@ from .search_results_view import *
 from .recipe_delete_view import *
 from .recipe_save_unsave_view import *
 from .saved_recipes_view import *
-
+from .create_review_view import *
 
 def pass_(request):
     """

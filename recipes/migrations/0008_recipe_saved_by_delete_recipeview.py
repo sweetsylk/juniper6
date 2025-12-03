@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='saved_by',
             field=models.ManyToManyField(blank=True, related_name='saved_recipes', to=settings.AUTH_USER_MODEL),
         ),
-        migrations.DeleteModel(
-            name='RecipeView',
-        ),
+        #migrations.DeleteModel(
+        #    name='RecipeView',
+        #),
     ]
