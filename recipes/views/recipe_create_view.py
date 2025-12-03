@@ -2,29 +2,33 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse
-from django.db import transaction # Import transaction for data safety
-
-# Make sure to import the Formset we created in the previous step
+from django.db import transaction
 from recipes.forms import RecipeForm, IngredientFormSet 
 from recipes.models import Recipe 
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
+    """Create a new recipe along with its ingredients using a formset."""
+
     template_name = 'create_recipe.html'
     form_class = RecipeForm
     model = Recipe 
     
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
+        """ Include the IngredientFormSet in the context."""
+
+        context = super().get_context_data(**kwargs)
+
         if self.request.POST:
-            data['ingredients'] = IngredientFormSet(self.request.POST)
+            context['ingredients'] = IngredientFormSet(self.request.POST)
         else:
-            data['ingredients'] = IngredientFormSet()
-        return data
+            context['ingredients'] = IngredientFormSet()
+
+        return context
 
     def form_valid(self, form):
         """
-        This runs when the main RecipeForm is valid. 
-        We must now ALSO check if the IngredientFormSet is valid.
+        Handle saving the recipe AND the ingredient formset.
+        Ensures both save together using an atomic transaction.
         """
         context = self.get_context_data()
         ingredients = context['ingredients']
@@ -36,14 +40,14 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
             if ingredients.is_valid():
                 self.object = form.save()
                 
-                # link the ingredients to the new recipe and save them
                 ingredients.instance = self.object
                 ingredients.save()
                 
                 return super().form_valid(form)
-            else:
-                return self.render_to_response(self.get_context_data(form=form))
+            
+            # If ingredients are invalid, re-render with errors
+            return self.render_to_response(context)
 
     def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS, "Your recipe has been created woah!")
+        messages.success(self.request, "Recipe created successfully!")
         return reverse('dashboard')

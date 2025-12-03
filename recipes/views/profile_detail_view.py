@@ -19,22 +19,20 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         """
         username = self.kwargs.get("username")
         if username is not None: 
-            # Show another user's profile 
             return get_object_or_404(User, username=username)
         
-        # Show the logged-in user's own profile
         return self.request.user
     
     
     def get_context_data(self, **kwargs):
         """
-        Add recipe information to the template context:
+        Add additional profile data:
         - All recipes by this user
         - Total recipe count 
         - Date the user joined 
         """
         context = super().get_context_data(**kwargs)
-        user = self.get_object()
+        user = context["profile_user"]
 
         user_recipes = Recipe.objects.filter(author=user)
 

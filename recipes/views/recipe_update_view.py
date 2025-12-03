@@ -6,16 +6,16 @@ from recipes.forms import RecipeForm
 from recipes.models import Recipe 
 
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
-    """Update the given recipe"""
+    """Allow users to update their own recipes."""
+
     template_name = 'update_recipe.html'
     form_class = RecipeForm
     model = Recipe 
     
     def get_queryset(self):
-        """ensure only the author can update their own recipes"""
+        """Only allow the logged-in user to update their own recipes."""
         return Recipe.objects.filter(author=self.request.user)
 
     def get_success_url(self):
-      
-        messages.add_message(self.request, messages.SUCCESS, "your recipe has been done woah!")
+        messages.success(self.request, "Recipe updated successfully!")
         return reverse('dashboard')
