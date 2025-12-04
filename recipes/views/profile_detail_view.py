@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
 from django.shortcuts import get_object_or_404
-from recipes.models import User, Recipe
+from recipes.models import User, Recipe, RecipeReview
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     """
@@ -18,7 +18,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         Otherwise, return the logged-in user.
         """
         username = self.kwargs.get("username")
-        if username is not None: 
+        if username: 
             # Show another user's profile 
             return get_object_or_404(User, username=username)
         
@@ -36,10 +36,14 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         user = self.get_object()
 
+        # Recipes written by the user
         user_recipes = Recipe.objects.filter(author=user)
-
         context["user_recipes"] = user_recipes
         context["recipe_count"] = user_recipes.count()
         context["date_joined"] = user.date_joined
+
+        # All reviews written by the user
+        user_reviews = RecipeReview.objects.filter(user=user).select_related("recipe")
+        context["user_reviews"] = user_reviews
         
         return context

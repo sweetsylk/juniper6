@@ -50,6 +50,7 @@ urlpatterns = [
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipes/<int:pk>/delete/', views.RecipeDeleteView.as_view(), name='delete_recipe'),
     path('recipes/<int:pk>/save/', views.SaveUnsaveRecipeView.as_view(), name='save_unsave_recipe'),
+    path('recipes/<int:pk>/review/', views.CreateRecipeReviewView.as_view(), name="recipe_review"),
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 
 ]

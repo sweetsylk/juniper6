@@ -92,4 +92,74 @@
     </div>
 
 </div>
+
+<div class="container my-5">
+    <h3 class="fw-bold mb-4">Reviews</h3>
+
+    {% if user.is_authenticated and user_review %}
+        <div class="alert alert-secondary">
+            <strong>Your Rating:</strong> {{ user_review.rating }}
+            {% if user_review.comment %}
+                <br><strong>Your Comment:</strong> {{ user_review.comment }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Leave a Review</h5>
+
+            <form method="POST" action="{% url 'recipe_review' recipe.pk %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Rating (1-5)</label>
+                    {{ review_form.rating }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Comment</label>
+                    {{ review_form.comment }}
+                </div>
+
+                <button class="btn btn-outline-success w-100" type="submit">
+                    Submit Review
+                </button>
+            </form>
+
+        </div>
+    </div>
+    {% else %}
+        <p><a href="{% url 'log_in' %}">Log in</a> to leave a review.</p>
+    {% endif %}
+
+    {% if reviews %}
+        {% for r in reviews %}
+        <div class="border rounded p-3 mb-3 shadow-sm bg-light">
+            <strong><a href="{% url 'display_user_profile' r.user.username %}"
+                        class="text-decoration-none link-dark">
+                        {{ r.user.username }}
+                    </a>
+                <div class="mt-1">
+
+                {% for i in "12345" %}
+                    {% if forloop.counter <= r.rating %}
+                        <i class="bi bi-star-fill text-warning"></i>
+                    {% else %}
+                    <i class ="bi bi-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+            {% if r.comment %}
+                <p class="mt-2 mb-0">{{ r.comment }}</p>
+            {% endif %}
+            <small class="text-muted">{{ r.created_at|date:"F j, Y"}}</small>
+        </div>
+    {% endfor %}
+    {% else %}
+        <p class="text-muted">No reviews yet. Be the first!</p>
+    {% endif %}
+</div>
 {% endblock %}
