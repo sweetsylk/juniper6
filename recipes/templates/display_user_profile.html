@@ -56,7 +56,7 @@
       </div>
       {% endif %}
 
-      {% if user_recipes %}
+      
       <hr class="my-5">
 
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -77,7 +77,7 @@
           </a>
           {% endif %}
       </div>
-
+  {% if user_recipes %}
             <div class="list-group">
 {% for recipe in user_recipes %}
   <div class="list-group-item py-3 mb-3 rounded shadow-sm">
@@ -131,7 +131,7 @@
 </div>
 
       {% else %}
-        <p class="text-muted text-center">You haven’t created any recipes yet.</p>
+        <p class="text-muted text-center">You have not created any recipes yet.</p>
       {% endif %}
 
       <hr class="my-5">
@@ -159,7 +159,13 @@
             <h5 class="mb-1">{{ review.recipe.title }}</h5>
 
             <p class="text-muted mb-1">
-                <strong>Rating:</strong> {{ review.rating }} /5
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        <i class="bi bi-star-fill text-warning"></i>
+                    {% else %}
+                    <i class ="bi bi-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
             </p>
 
           {% if review.comment %}
@@ -186,9 +192,14 @@
       </div>
 
       {% else %}
-        <p class="text_muted">No reviews yet.</p>
+        <p class="text-muted text-center mt-3">
+        {% if request.user == profile_user %}
+          You have not written any reviews yet.
+        {% else %}
+          {{ profile_user.full_name | default:profile_user.username}} has not written any reviews yet.
       {% endif %}
-
+        </p>
+      {% endif %}
     </div>
   </div>
 </div>

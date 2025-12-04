@@ -137,8 +137,21 @@
     {% if reviews %}
         {% for r in reviews %}
         <div class="border rounded p-3 mb-3 shadow-sm bg-light">
-            <strong>{{ r.user.username }}</strong> - {{ r.rating }}
-            <br>
+            <strong><a href="{% url 'display_user_profile' r.user.username %}"
+                        class="text-decoration-none link-dark">
+                        {{ r.user.username }}
+                    </a>
+                <div class="mt-1">
+
+                {% for i in "12345" %}
+                    {% if forloop.counter <= r.rating %}
+                        <i class="bi bi-star-fill text-warning"></i>
+                    {% else %}
+                    <i class ="bi bi-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
             {% if r.comment %}
                 <p class="mt-2 mb-0">{{ r.comment }}</p>
             {% endif %}
