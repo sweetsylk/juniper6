@@ -6,11 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('recipes', '0007_recipeview'),
+        #('recipes', '0007_recipeview'),
+        ('recipes', '0002_user_profile_image_recipe_recipeingredient_and_more'),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='RecipeView',
-        ),
+        #migrations.DeleteModel(
+            #name='RecipeView',
+        #),
     ]
