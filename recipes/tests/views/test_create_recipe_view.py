@@ -38,6 +38,30 @@ class RecipeCreateViewTestCase(TestCase):
     def test_create_recipe_url(self):
         self.assertEqual(self.url, '/recipes/create/')
 
+    def test_add_ingredient_button(self):
+        """
+        tests that clicking add ingredient increases the formset total
+        and rerenders the page
+        """
+        self.client.login(username=self.user.username, password='Password123')
+        
+        payload = self.form_input.copy()
+        payload['add_ingredient'] = 'true' 
+        
+     
+        response = self.client.post(self.url, payload)
+        
+
+        self.assertEqual(response.status_code, 200) 
+        self.assertTemplateUsed(response, 'create_recipe.html')
+        
+        formset = response.context['ingredients']
+        total_forms = int(formset.data['ingredients-TOTAL_FORMS'])
+        self.assertEqual(total_forms, 2)
+        
+        
+        self.assertEqual(Recipe.objects.count(), 0)
+
     def test_get_create_recipe(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
