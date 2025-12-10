@@ -17,6 +17,10 @@ class SavedRecipesView(ListView):
         Get the queryset of saved recipes for the specified user
         """
 
-        profile_user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return profile_user.saved_recipes.all()
-
+        self.profile_user = get_object_or_404(User, pk=self.kwargs['pk'])
+        return self.profile_user.saved_recipes.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['saved_count'] = self.profile_user.saved_recipes.count()
+        return context 

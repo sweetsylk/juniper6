@@ -41,6 +41,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         context["user_recipes"] = user_recipes
         context["recipe_count"] = user_recipes.count()
         context["date_joined"] = user.date_joined
+        context["saved_count"] = user.saved_recipes.count()
 
         # All reviews written by the user
         user_reviews = RecipeReview.objects.filter(user=user).select_related("recipe")
