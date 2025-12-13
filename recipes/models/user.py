@@ -32,6 +32,17 @@ class User(AbstractUser):
         blank=True
     )
 
+    def follow(self, other_user):
+        """Follow another user, cannot follow yourself"""
+
+        if self != other_user:
+            other_user.followers.add(self)
+
+    def unfollow(self, other_user):
+        """Unfollow a user"""
+
+        other_user.followers.remove(self)
+
     class Meta:
         """Model options."""
 

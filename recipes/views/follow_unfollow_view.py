@@ -14,10 +14,8 @@ class FollowUnfollowView(LoginRequiredMixin, View):
 
         if current_user != target_user:
             if current_user in target_user.followers.all():
-                # Already following → unfollow
-                target_user.followers.remove(current_user)
+                current_user.unfollow(target_user)  # current_user unfollows target
             else:
-                # Not following → follow
-                target_user.followers.add(current_user)
+                current_user.follow(target_user)    # current_user follows target
 
         return redirect('display_user_profile', username=target_user.username)
