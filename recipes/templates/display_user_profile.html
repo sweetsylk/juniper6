@@ -42,8 +42,6 @@
       </div>
       {% endif %}
 
-
-
       {% if request.user == profile_user %}
       <div class="d-flex justify-content-center gap-3 mt-3">
 
@@ -68,9 +66,7 @@
 
 
       <hr class="my-5">
-
       <div class="d-flex justify-content-between align-items-center mb-4">
-
         <h3 class="m-0">
           {% if request.user == profile_user %}
           My Recipes
@@ -86,6 +82,7 @@
         </a>
         {% endif %}
       </div>
+
       {% if user_recipes %}
       <div class="list-group">
         {% for recipe in user_recipes %}
@@ -204,6 +201,44 @@
         {% endif %}
       </p>
       {% endif %}
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row text-center mb-4">
+      <div class="col-md-6">
+        <h4>Followers ({{ followers.count }})</h4>
+        {% if followers %}
+        <ul class="list-unstyled">
+          {% for follower in followers %}
+          <li>
+            <a href="{% url 'display_user_profile' follower.username %}">
+              {{ follower.full_name|default:follower.username }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">No followers yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-md-6">
+        <h4>Following ({{ following.count }})</h4>
+        {% if following %}
+        <ul class="list-unstyled">
+          {% for followee in following %}
+          <li>
+            <a href="{% url 'display_user_profile' followee.username %}">
+              {{ followee.full_name|default:followee.username }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">Not following anyone yet.</p>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
