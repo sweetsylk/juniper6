@@ -1,73 +1,53 @@
 {% extends 'base_content.html' %}
 {% block content %}
-{% load static%}
+{% load static %}
 
-<!--Display the logged in user's activity- the recipes they've made, drafed, liked, saved, rated, 
-    commented on, etc.
-    Could add option to make activity/specific activities public or private, like your
-    saves or ratings and reviews -->
-
-<div class="container-fluid">
-
-  <div class="jumbotron mb-3 mt-3 p-3 p-md-5 text-white rounded bg-dark">
-    <div class="col-md-6 px-0">
-     <h1 style="text-align: center;"><b>Welcome to your Dashboard {{ user.username }}</b></h1>
+<div class="container my-4">
+    <div class="p-4 bg-dark text-white rounded text-center">
+        <h1 class="fw-bold">Welcome to your Dashboard, {{ user.username }}</h1>
     </div>
-
 </div>
 
-<div class="container mb-3">
-  <div class="row row-cols-1 row-cols-md-2 g-4">
+<div class="container my-4">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
 
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View your drafts</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
+        <div class="col">
+            <a href="{% url 'display_saved_recipes' user.pk %}" class="text-decoration-none">
+                <div class="card text-white">
+                    <img src="{% static 'grey.jpg' %}" class="card-img" alt="Saved">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 rounded">
+                        <h4 class="card-title fw-bold">Saved Recipes</h4>
+                        <p class="card-text">Recipes you’ve bookmarked.</p>
+                    </div>
+                </div>
+            </a>
         </div>
-      </a>
-    </div>
 
-    <div class="col d-flex">
-      <a href="{% url 'display_saved_recipes' request.user.pk %}" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View your saved recipes</h5>
-            <p class="card-text">text</p>
-          </div>
+        <div class="col">
+            <a href="{% url 'dashboard_my_recipes' %}" class="text-decoration-none">
+                <div class="card text-white">
+                    <img src="{% static 'grey.jpg' %}" class="card-img" alt="My Recipes">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 rounded">
+                        <h4 class="card-title fw-bold">My Recipes</h4>
+                        <p class="card-text">Everything you’ve created.</p>
+                    </div>
+                </div>
+            </a>
         </div>
-      </a>
-    </div>
 
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View Your Reviews and Ratings</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
+        <div class="col">
+            <a href="{% url 'dashboard_my_reviews' %}" class="text-decoration-none">
+                <div class="card text-white">
+                    <img src="{% static 'grey.jpg' %}" class="card-img" alt="Reviews">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 rounded">
+                        <h4 class="card-title fw-bold">My Reviews</h4>
+                        <p class="card-text">Reviews you have written.</p>
+                    </div>
+                </div>
+            </a>
         </div>
-      </a>
-    </div>
 
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View Your Recently Deleted</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
-        </div>
-      </a>
     </div>
-  </div>
-
 </div>
 
 {% endblock %}
