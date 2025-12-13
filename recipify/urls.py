@@ -44,6 +44,7 @@ urlpatterns = [
     path('users/<int:pk>/recipes/', views.pass_, name='display_user_recipes'),
     path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
     path('users/<int:pk>/saves/', views.SavedRecipesView.as_view(), name='display_saved_recipes'),
+    path('users/<int:pk>/toggle-follow/', views.FollowUnfollowView.as_view(), name='toggle-follow'),
 
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='display_recipe'),

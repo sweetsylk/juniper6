@@ -45,5 +45,13 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # All reviews written by the user
         user_reviews = RecipeReview.objects.filter(user=user).select_related("recipe")
         context["user_reviews"] = user_reviews
+
+        # Followers and following users
+        context["followers"] = user.followers.all()
+        context["following"] = user.following.all()
+
+        # Followers and following count
+        context["follower_count"] = user.followers.count()
+        context["following_count"] = user.following.count()
         
         return context

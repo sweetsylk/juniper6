@@ -24,6 +24,25 @@ class User(AbstractUser):
         null=True
     )
 
+    # Users who follow this user
+    followers = models.ManyToManyField(
+        'self',
+        symmetrical=False, # following is directional (can follow without being followed back)
+        related_name='following',   # the user this user follows
+        blank=True
+    )
+
+    def follow(self, other_user):
+        """Follow another user, cannot follow yourself"""
+
+        if self != other_user:
+            other_user.followers.add(self)
+
+    def unfollow(self, other_user):
+        """Unfollow a user"""
+
+        other_user.followers.remove(self)
+
     class Meta:
         """Model options."""
 
