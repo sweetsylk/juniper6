@@ -6,11 +6,15 @@ from recipes.models import Recipe, RecipeReview
 from recipes.forms import ReviewForm
 
 class RecipeReviewsView(View):
+    """Display and handle reviews for a specific recipe"""
     
     def get(self, request, pk):
+        """Display the recipe review page"""
+
         recipe = get_object_or_404(Recipe, pk=pk)
         reviews = RecipeReview.objects.filter(recipe=recipe)
-
+        
+        # Get the current user's review (if logged-in)
         user_review = None 
         if request.user.is_authenticated:
             user_review = RecipeReview.objects.filter(recipe=recipe, user=request.user).first()
@@ -31,6 +35,8 @@ class RecipeReviewsView(View):
         return render(request, "recipe_reviews.html", context)
     
     def post(self, request, pk):
+        """Handle creating or updating a review"""
+
         if not request.user.is_authenticated:
             messages.error(request, "You must log in to leave a review.")
             return redirect('log_in')
@@ -42,6 +48,7 @@ class RecipeReviewsView(View):
             rating = form.cleaned_data['rating']
             comment = form.cleaned_data['comment']
 
+            # Create a new review or update the existing one 
             review, created = RecipeReview.objects.update_or_create(
                 recipe = recipe,
                 user = request.user,
