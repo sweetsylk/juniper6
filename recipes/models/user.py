@@ -24,6 +24,14 @@ class User(AbstractUser):
         null=True
     )
 
+    # Users who follow this user
+    followers = models.ManyToManyField(
+        'self',
+        symmetrical=False, # following is directional (can follow without being followed back)
+        related_name='following',   # the user this user follows
+        blank=True
+    )
+
     class Meta:
         """Model options."""
 
