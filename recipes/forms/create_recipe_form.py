@@ -9,10 +9,12 @@ class RecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
     instructions = forms.CharField(widget=forms.Textarea(attrs={'rows': 8}))
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+            
     class Meta:
         model = Recipe
         fields = [
@@ -22,7 +24,7 @@ class RecipeForm(forms.ModelForm):
             'servings', 
             'instructions', 
             'tags', 
-            'image'
+            'image',
         ]
        
 # this is the Ingredient form specifically in which a user can put their ingredient in

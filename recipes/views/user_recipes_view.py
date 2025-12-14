@@ -10,5 +10,5 @@ class MyRecipesView(ListView):
 
     def get_queryset(self):
         """Return the user's recipes ordered from newest to oldest"""
-        
+
         return Recipe.objects.filter(author=self.request.user).order_by('-created_at')
