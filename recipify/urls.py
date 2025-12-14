@@ -57,6 +57,7 @@ urlpatterns = [
     path('dashboard/my-recipes/', views.MyRecipesView.as_view(), name='dashboard_my_recipes'),
     path("dashboard/my-reviews/", views.MyReviewsView.as_view(), name="dashboard_my_reviews"),
 
+    path('users/<str:username>/recipes/',views.ProfileDetailView.as_view(extra_context={"show_recipes_only": True} ), name='display_other_users_recipes'),
 
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 

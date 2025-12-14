@@ -54,5 +54,9 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Followers and following count
         context["follower_count"] = user.followers.count()
         context["following_count"] = user.following.count()
-        
+
+        # Flag used by the template to switch between full profile view
+        # and recipes-only view (overridden via URL extra_context).
+        context.setdefault("show_recipes_only", False)
+
         return context

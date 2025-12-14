@@ -10,6 +10,8 @@
   <div class="row justify-content-center">
     <div class="col-md-12">
 
+      {% if not show_recipes_only %}
+
       <h1 class="text-center mt-4 mb-4">{{ profile_user.full_name }}</h1>
 
       {% if profile_user.profile_image %}
@@ -33,44 +35,43 @@
         <div><strong>{{ user_reviews.count }}</strong><br><small>Reviews</small></div>
         <div><strong>{{ saved_count }}</strong><br><small>Saved</small></div>
         </div>
-
-        </div>
+      </div>
 
       {% if request.user != profile_user %}
-      <div class="d-flex justify-content-center mt-3">
+      <div class="d-flex justify-content-center gap-2 mt-3">
+
         <form method="post" action="{% url 'toggle-follow' profile_user.pk %}">
           {% csrf_token %}
           {% if request.user in profile_user.followers.all %}
-          <button type="submit" class="btn btn-outline-primary">Unfollow</button>
+            <button type="submit"
+                    class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+              Unfollow
+            </button>
           {% else %}
-          <button type="submit" class="btn btn-primary">Follow</button>
+            <button type="submit"
+                    class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+              Follow
+            </button>
           {% endif %}
         </form>
-      </div>
+
+        <a href="{% url 'display_other_users_recipes' profile_user.username %}"
+          class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+          View Recipes
+        </a>
+
+        </div>
       {% endif %}
 
       {% if request.user == profile_user %}
-      <div class="d-flex justify-content-center gap-3 mt-3">
-
-        <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill"
-            viewBox="0 0 16 16">
-            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 
-                     14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 
-                     6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 
-                     0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 
-                     .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 
-                     0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1
-                     -.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 
-                     0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 
-                     0 0 0 .168-.11z" />
-          </svg>
+      <div class="d-flex justify-content-center mt-3">
+        <a href="{% url 'update_profile' %}"
+           class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+          <i class="bi bi-pencil me-1"></i>
           Edit Profile
         </a>
-
       </div>
       {% endif %}
-
 
     <hr class="my-5">
 
@@ -108,9 +109,30 @@
         <p class="text-muted">Not following anyone yet.</p>
         {% endif %}
       </div>
+      </div>
+
+      {% endif %}
+
+      <hr class="my-5">
+
+    {% if show_recipes_only %}
+    <h3 class="text-center mb-4">
+      Recipes by {{ profile_user.full_name }}
+    </h3>
+
+    {% if user_recipes %}
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+          {% for recipe in user_recipes %}
+            {% include "partials/recipe_card.html" with recipe=recipe %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted text-center">No recipes yet.</p>
+      {% endif %}
+    {% endif %}
+
     </div>
   </div>
-
 </div>
 
 {% endblock %}
