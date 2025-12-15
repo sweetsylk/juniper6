@@ -35,6 +35,19 @@
           {{ recipe.author.username }}
         </a>
       </p>
+
+        <div class="mb-1">
+          {% with recipe.avg_rating|default_if_none:0|floatformat:0 as rounded %}
+            {% for i in "12345" %}
+              {% if forloop.counter <= rounded|add:0 %}
+                <i class="bi bi-star-fill text-warning fs-5"></i>
+              {% else %}
+                <i class="bi bi-star text-warning opacity-50 fs-5"></i>
+              {% endif %}
+            {% endfor %}
+          {% endwith %}
+        </div>
+        
       <p class="card-text mt-auto tag-clamp"><small class="text-muted">
           {% for tag in recipe.tags.all %}
           <a class='tag-link' href="{% url 'display_tag' tag=tag.name %}">#{{ tag.name }}</a>
