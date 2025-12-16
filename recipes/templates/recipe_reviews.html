@@ -3,7 +3,7 @@
 
 <div class="container my-5">
 
-    <a href="{% url 'display_recipe' recipe.id %}" class="btn btn-outline-secondary mb-4">
+    <a href="{% url 'display_recipe' recipe.id %}" class="btn btn-outline-secondary rounded-pill shadow-sm mb-4">
         Back to Recipe
     </a>
 
@@ -37,7 +37,7 @@
                         {{ review_form.comment }}
                     </div>
 
-                    <button class="btn btn-outline-success w-100" type="submit">
+                    <button class="btn btn-outline-success rounded-pill shadow-sm w-100" type="submit">
                         Submit Review
                     </button>
                 </form>
