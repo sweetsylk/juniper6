@@ -1,6 +1,7 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container my-5">
+
     <!--top bar container-->
     <div class="text-center mb-4">
         <h1 class="fw-bold">{{ recipe.title }}</h1>
@@ -44,13 +45,13 @@
     </div>
 
     <!-- View Reviews -->
-
-    <div class="text-center my-4">
-        <a href="{% url 'recipe_reviews' recipe.id %}" class="btn btn-outline-secondary btn-lg">
-            Add / View Reviews
-        </a>
-    </div>
-
+         
+        <div class="text-center my-4">
+            <a href="{% url 'recipe_reviews' recipe.id %}" class="btn btn-outline-secondary rounded-pill shadow-sm btn-lg">
+                Reviews
+            </a>
+        </div>
+    
     <!-- Ingredients and Directions Container-->
     <div class="row g-4">
 
