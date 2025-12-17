@@ -1,5 +1,6 @@
 from django import forms
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.core.exceptions import ValidationError
 from ..models import Recipe, RecipeIngredient
 """
 This is the form for creating a recipe that is on the create_recipe.html page
@@ -9,12 +10,20 @@ class RecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
     instructions = forms.CharField(widget=forms.Textarea(attrs={'rows': 8}))
 
+    image = forms.ImageField(required=True)
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-            
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if not tags:
+            raise forms.ValidationError("At least one tag is required.")
+        return tags
+
     class Meta:
         model = Recipe
         fields = [
@@ -47,10 +56,39 @@ class RecipeIngredientForm(forms.ModelForm):
             }),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        amount = cleaned_data.get('amount')
+
+        if not name or amount is None or amount <= 0:
+            raise forms.ValidationError(
+                "Each ingredient must have a name and a valid amount."
+            )
+
+        return cleaned_data
+    
+class BaseRecipeIngredientFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+        valid_forms = [
+            form for form in self.forms
+            if form.has_changed() and not form.cleaned_data.get('DELETE', False)
+        ]
+
+        if len(valid_forms) < 1:
+            raise ValidationError(
+                "Please enter at least one ingredient."
+            )
+
+
+
 IngredientFormSet = inlineformset_factory(
     Recipe,                 
     RecipeIngredient,       
     form=RecipeIngredientForm, 
+    formset=BaseRecipeIngredientFormSet,
     extra=1,     
-    can_delete=True         
+    can_delete=True, 
 )       
