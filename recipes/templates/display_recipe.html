@@ -1,38 +1,39 @@
 {% extends 'base_content.html' %}
+
 {% block content %}
 <div class="container my-5">
 
-    <!--top bar container-->
     <div class="text-center mb-4">
         <h1 class="fw-bold">{{ recipe.title }}</h1>
         <p class="text-muted mb-1">
-            by <span class="fw-semibold">{{recipe.author.username}}</span>
+            by <span class="fw-semibold">{{ recipe.author.username }}</span>
         </p>
+
         {% if recipe.created_at %}
         <p class="text-muted mb-0">Posted on {{ recipe.created_at|date:"F j, Y" }}</p>
         {% endif %}
 
-        {% if recipe.tags %}
-        {% for tag in recipe.tags.all %}
+        {% with tags=recipe.tags.all %}
+        {% if tags %}
+        {% for tag in tags %}
         <span class="badge bg-secondary">{{ tag.name }}</span>
         {% endfor %}
         {% endif %}
+        {% endwith %}
     </div>
 
-    <!-- Image description of Recipe-->
     <div class="text-center mb-4">
-        <p>{{recipe.description}}</p>
+        <p>{{ recipe.description }}</p>
+
         {% if recipe.image %}
-        <img src="{{recipe.image.url}}" alt="{{recipe.title}}" class="img-fluid rounded shadow"
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="img-fluid rounded shadow"
             style="max-height: 400px; max-width: 800px; object-fit: cover;">
         {% endif %}
     </div>
 
-    <!-- Recipe Info (Time, Servings, Yield)-->
     <div class="row justify-content-center text-center mb-4 g-3">
         <div class="col-6 col-md-3">
-
-            <div class="border rounded p-3 shadow-sm bg-light">
+            <div class="border rounded p-3 shadow-sm bg-light mb-3">
                 <h5 class="text-muted mb-1">Prep Time</h5>
                 <p class="fw-semibold mb-0">{{ recipe.prep_time }} minutes</p>
             </div>
@@ -44,56 +45,56 @@
         </div>
     </div>
 
-    <!-- View Reviews -->
-         
-        <div class="text-center my-4">
-            <a href="{% url 'recipe_reviews' recipe.id %}" class="btn btn-outline-secondary rounded-pill shadow-sm btn-lg">
-                Reviews
-            </a>
-        </div>
-    
-    <!-- Ingredients and Directions Container-->
+    <div class="text-center my-4">
+        <a href="{% url 'recipe_reviews' recipe.id %}" class="btn btn-outline-secondary rounded-pill shadow-sm btn-lg">
+            Reviews
+        </a>
+    </div>
+
     <div class="row g-4">
 
-        <!-- Ingredients-->
         <div class="col-12 col-lg-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h3 class="card-title mb-3">Ingredients</h3>
+
                     <ul class="list-unstyled mb-0">
-                        {% if recipe.instructions %}
-                        {% for ingredient in recipe.ingredients.all %}
+                        {% with ingredients=recipe.ingredients.all %}
+                        {% if ingredients %}
+                        {% for ingredient in ingredients %}
                         <li>
                             {{ ingredient.name }}
-                            {% if ingredient.amount %} - {{ ingredient.amount }} {% endif %}
-                            {% if ingredient.unit %} {{ ingredient.unit }} {% endif %}
-
+                            {% if ingredient.amount %} - {{ ingredient.amount|floatformat:"-2" }}{% endif %}
+                            {% if ingredient.unit %} {{ ingredient.unit }}{% endif %}
                         </li>
                         {% endfor %}
                         {% else %}
-                        <p>No ingredients available.</p>
+                        <li>No ingredients available.</li>
                         {% endif %}
+                        {% endwith %}
                     </ul>
+
                 </div>
             </div>
         </div>
 
-        <!-- Directions-->
         <div class="col-12 col-lg-8">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h3 class="card-title mb-3">Directions</h3>
+
                     <ol class="list-group list-group-numbered list-group-flush">
-                        {% if recipe.instructions %}
-                        {% for step in recipe.instructions.splitlines %}
-                        <li class="list-group-item">
-                            {{step}}
-                        </li>
+                        {% with steps=recipe.instructions.all %}
+                        {% if steps %}
+                        {% for step in steps %}
+                        <li class="list-group-item">{{ step.text }}</li>
                         {% endfor %}
                         {% else %}
-                        <p>No instructions available.</p>
+                        <li class="list-group-item">No instructions available.</li>
                         {% endif %}
+                        {% endwith %}
                     </ol>
+
                 </div>
             </div>
         </div>

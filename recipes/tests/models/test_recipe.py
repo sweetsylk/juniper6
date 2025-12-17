@@ -45,9 +45,6 @@ class RecipeModelTestCase(TestCase):
         self.recipe.servings = None
         self._assert_recipe_is_invalid()
 
-    def test_instructions_cannot_be_blank(self):
-        self.recipe.instructions = ''
-        self._assert_recipe_is_invalid()
 
     def test_image_can_be_blank(self):
         self.recipe.image = None

@@ -8,7 +8,7 @@ class Recipe(models.Model):
     description = models.TextField()
     prep_time = models.IntegerField() 
     servings = models.IntegerField() 
-    instructions = models.TextField()
+    # instructions = models.TextField()  <-- REMOVE OR COMMENT OUT THIS LINE
     tags = TaggableManager()
     image = models.ImageField(upload_to='recipe_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -18,12 +18,9 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
-# seperated ingredient into a seperate model 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, related_name='ingredients', on_delete=models.CASCADE)
     name = models.CharField(max_length=100) 
-    
-
     amount = models.DecimalField(max_digits=5, decimal_places=2, default = 0) 
     
     UNIT_CHOICES = [
@@ -39,3 +36,15 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.amount} {self.unit})"
+
+
+class RecipeInstruction(models.Model):
+    recipe = models.ForeignKey(Recipe, related_name='instructions', on_delete=models.CASCADE)
+    step_number = models.PositiveIntegerField(default=1)
+    text = models.TextField()
+
+    class Meta:
+        ordering = ['step_number'] 
+
+    def __str__(self):
+        return f"Step {self.step_number}"

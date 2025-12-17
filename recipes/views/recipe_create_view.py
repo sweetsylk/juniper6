@@ -1,14 +1,11 @@
-"""
-This is the view to help deal with responses and requests within the create_recipe.html page
-"""
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse
 from django.db import transaction
-from recipes.forms import RecipeForm, IngredientFormSet 
-from recipes.models import Recipe, RecipeIngredient
+from recipes.forms import RecipeForm, IngredientFormSet, InstructionFormSet
+from recipes.models import Recipe, RecipeIngredient, RecipeInstruction
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     template_name = 'create_recipe.html'
@@ -18,7 +15,6 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         
-        # we are checking if 'ingredients' was already passed (from the post method)
         if 'ingredients' in kwargs:
             data['ingredients'] = kwargs['ingredients']
         else:
@@ -27,57 +23,63 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
             else:
                 data['ingredients'] = IngredientFormSet(queryset=RecipeIngredient.objects.none(), prefix='ingredients')
         
+        if 'instructions' in kwargs:
+            data['instructions'] = kwargs['instructions']
+        else:
+            if self.request.POST:
+                data['instructions'] = InstructionFormSet(self.request.POST, prefix='instructions')
+            else:
+                data['instructions'] = InstructionFormSet(queryset=RecipeInstruction.objects.none(), prefix='instructions')
+
         return data
 
     def post(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
         
-        if 'add_ingredient' in request.POST: # so if add ingredient was pressees
+        if 'add_ingredient' in request.POST:
             copy = request.POST.copy()
-            
-            # Use the correct prefix 'ingredients' to find the count
-            total_forms_key = 'ingredients-TOTAL_FORMS' 
-            current_count = int(copy.get(total_forms_key, 0))
-            
-            # Increment the form count
-            copy[total_forms_key] = current_count + 1
-            
-            # Initialize the formset with the updated count (copy)
+            copy['ingredients-TOTAL_FORMS'] = int(copy.get('ingredients-TOTAL_FORMS', 0)) + 1
             ingredients = IngredientFormSet(copy, queryset=RecipeIngredient.objects.none(), prefix='ingredients')
             
-            form.is_valid() 
-            form.errors.clear()
+            instructions = InstructionFormSet(request.POST, queryset=RecipeInstruction.objects.none(), prefix='instructions')
             
-            ingredients.is_valid()
-            ingredients.errors.clear()
-            for subform in ingredients:
-                subform.errors.clear()
+            return self.render_to_response(self.get_context_data(form=form, ingredients=ingredients, instructions=instructions))
 
-            # this now returns the form with updated ingredients in its format
-            return self.render_to_response(
-                self.get_context_data(form=form, ingredients=ingredients)
-            )
+        if 'add_instruction' in request.POST:
+            copy = request.POST.copy()
+            copy['instructions-TOTAL_FORMS'] = int(copy.get('instructions-TOTAL_FORMS', 0)) + 1
+            instructions = InstructionFormSet(copy, queryset=RecipeInstruction.objects.none(), prefix='instructions')
+            
+            ingredients = IngredientFormSet(request.POST, queryset=RecipeIngredient.objects.none(), prefix='ingredients')
 
-        # now for the recipe upload overall
+            return self.render_to_response(self.get_context_data(form=form, ingredients=ingredients, instructions=instructions))
+
         ingredients = IngredientFormSet(request.POST, prefix='ingredients')
+        instructions = InstructionFormSet(request.POST, prefix='instructions')
         
-        if form.is_valid() and ingredients.is_valid():
-            return self.form_valid(form, ingredients)
+        if form.is_valid() and ingredients.is_valid() and instructions.is_valid():
+            return self.form_valid(form, ingredients, instructions)
         else:
-            return self.form_invalid(form, ingredients)
+            return self.form_invalid(form, ingredients, instructions)
 
-    def form_valid(self, form, ingredients):
+    def form_valid(self, form, ingredients, instructions):
         with transaction.atomic():
             form.instance.author = self.request.user
             self.object = form.save()
+            
             ingredients.instance = self.object
             ingredients.save()
+            
+            instructions.instance = self.object
+            instructions.save()
+            
         return super().form_valid(form)
 
-    def form_invalid(self, form, ingredients):
+    def form_invalid(self, form, ingredients, instructions):
         return self.render_to_response(
-            self.get_context_data(form=form, ingredients=ingredients))
+            self.get_context_data(form=form, ingredients=ingredients, instructions=instructions)
+        )
 
     def get_success_url(self):
         messages.success(self.request, "Your recipe has been created woah!")

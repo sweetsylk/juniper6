@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from recipes.models import Recipe, User, RecipeIngredient
+from recipes.models import User, Recipe, RecipeIngredient, RecipeInstruction
 from datetime import datetime
 
 class RecipePageViewTests(TestCase):
@@ -18,7 +18,6 @@ class RecipePageViewTests(TestCase):
             description="Test Food",
             prep_time=15,
             servings=3,
-            instructions="Step 1\nStep 2\nStep 3",
             created_at=datetime(2025, 1, 1, 12, 0),
             updated_at=datetime(2025, 1, 1, 12, 0),
         )
@@ -35,6 +34,9 @@ class RecipePageViewTests(TestCase):
             amount=50,
             unit="g"
         )
+        RecipeInstruction.objects.create(recipe=self.recipe, step_number=1, text="Step 1")
+        RecipeInstruction.objects.create(recipe=self.recipe, step_number=2, text="Step 2")
+        RecipeInstruction.objects.create(recipe=self.recipe, step_number=3, text="Step 3")
 
     def test_recipe_page_loads_successfully(self):
         """

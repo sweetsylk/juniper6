@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from recipes.models.user import User
-from recipes.models.recipe import Recipe
-
+from recipes.models import User, Recipe,RecipeIngredient, RecipeInstruction
 
 class SaveUnsaveRecipeViewTests(TestCase):
     """Tests SaveUnsaveRecipeView which deals with saving and unsaving recipes for a user"""
@@ -19,8 +18,8 @@ class SaveUnsaveRecipeViewTests(TestCase):
             description="desc",
             prep_time=10,
             servings=1,
-            instructions="test instructions"
         )
+        RecipeInstruction.objects.create(recipe=self.recipe, text="test instructions")
 
         self.url = reverse("save_unsave_recipe", args=[self.recipe.pk])
 

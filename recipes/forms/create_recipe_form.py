@@ -1,14 +1,12 @@
 from django import forms
 from django.forms import inlineformset_factory
-from ..models import Recipe, RecipeIngredient
+from ..models import Recipe, RecipeIngredient, RecipeInstruction
 """
 This is the form for creating a recipe that is on the create_recipe.html page
 """
 
 class RecipeForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
-    instructions = forms.CharField(widget=forms.Textarea(attrs={'rows': 8}))
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,7 +20,6 @@ class RecipeForm(forms.ModelForm):
             'description',
             'prep_time', 
             'servings', 
-            'instructions', 
             'tags', 
             'image',
         ]
@@ -54,3 +51,23 @@ IngredientFormSet = inlineformset_factory(
     extra=1,     
     can_delete=True         
 )       
+
+class RecipeInstructionForm(forms.ModelForm):
+    class Meta:
+        model = RecipeInstruction
+        fields = ['text'] # We can auto-calculate step_number or let user input it
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Explain this step...',
+                'rows': 2
+            }),
+        }
+
+InstructionFormSet = inlineformset_factory(
+    Recipe,
+    RecipeInstruction,
+    form=RecipeInstructionForm,
+    extra=1,
+    can_delete=True
+)

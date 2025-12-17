@@ -2,8 +2,7 @@ from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from recipes.forms import RecipeForm
-from recipes.models import User, Recipe, RecipeIngredient
-
+from recipes.models import User, Recipe, RecipeIngredient, RecipeInstruction
 class RecipeCreateViewTestCase(TestCase):
     # this to test the create recipe view
 
@@ -20,7 +19,6 @@ class RecipeCreateViewTestCase(TestCase):
             'description': 'Philly cheese stake meal so yummy',
             'prep_time': 30,
             'servings': 5,
-            'instructions': 'IDK just make it bro',
             'tags': 'Meat, American, Sandwich',
             
            
@@ -33,6 +31,12 @@ class RecipeCreateViewTestCase(TestCase):
             'ingredients-0-name': 'Ribeye Steak',
             'ingredients-0-amount': '200',
             'ingredients-0-unit': 'g',
+
+            'instructions-TOTAL_FORMS': '1', 
+            'instructions-INITIAL_FORMS': '0',
+            'instructions-MIN_NUM_FORMS': '0',
+            'instructions-MAX_NUM_FORMS': '1000',
+            'instructions-0-text': 'Cook the steak',
         }
 
     def test_create_recipe_url(self):
@@ -88,6 +92,7 @@ class RecipeCreateViewTestCase(TestCase):
         self.client.login(username=self.user.username, password='Password123')
         before_count = Recipe.objects.count()
         before_ing_count = RecipeIngredient.objects.count()
+        before_inst_count = RecipeInstruction.objects.count()
         
         response = self.client.post(self.url, self.form_input, follow=True)
         
@@ -98,11 +103,13 @@ class RecipeCreateViewTestCase(TestCase):
         new_recipe = Recipe.objects.latest('created_at')
         self.assertEqual(new_recipe.title, 'Philly Cheesestake')
         self.assertEqual(new_recipe.author, self.user)
-        
+         
        
         self.assertEqual(RecipeIngredient.objects.count(), before_ing_count + 1)
         self.assertEqual(new_recipe.ingredients.first().name, 'Ribeye Steak')
 
+        self.assertEqual(RecipeInstruction.objects.count(), before_inst_count + 1)
+        self.assertEqual(new_recipe.instructions.first().text, 'Cook the steak')
         response_url = reverse('dashboard')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')

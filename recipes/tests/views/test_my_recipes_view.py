@@ -1,7 +1,6 @@
 from django.urls import reverse
 from django.test import TestCase
-from recipes.models import User, Recipe
-
+from recipes.models import User, Recipe, RecipeIngredient, RecipeInstruction
 class MyRecipeViewTestCase(TestCase):
     """Tests for the user's recipes list view"""
 
@@ -14,23 +13,24 @@ class MyRecipeViewTestCase(TestCase):
         self.user = User.objects.get(username='@johndoe')
         self.other_user = User.objects.get(username='@janedoe')
 
-        Recipe.objects.create(
+        r1 = Recipe.objects.create(
         title='My Recipe',
         author=self.user,
         description='Test',
         prep_time=10,
         servings=2,
-        instructions='Test instructions'
         )
+        RecipeInstruction.objects.create(recipe=r1, text='Test instructions')
 
-        Recipe.objects.create(
+        r2 = Recipe.objects.create(
             title='Other Recipe',
             author=self.other_user,
             description='Test',
             prep_time=15,
             servings=3,
-            instructions='Other instructions'
         )
+        RecipeInstruction.objects.create(recipe=r2, text='Other instructions')
+
         
         self.url = reverse('dashboard_my_recipes')
 

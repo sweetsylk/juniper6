@@ -1,8 +1,7 @@
 from django.contrib.messages import get_messages
 from django.test import TestCase, Client
 from django.urls import reverse
-from recipes.models import User, Recipe
-
+from recipes.models import User, Recipe, RecipeIngredient, RecipeInstruction
 class DeleteRecipeViewTestCase(TestCase):
 
     fixtures = ['recipes/tests/fixtures/default_user.json']
@@ -21,9 +20,9 @@ class DeleteRecipeViewTestCase(TestCase):
             description="Testing deletion",
             prep_time=10, 
             servings=2,
-            instructions="Test"
         )
 
+        RecipeInstruction.objects.create(recipe=self.recipe, text="test Step 1")
         self.url = reverse('delete_recipe', kwargs={'pk': self.recipe.pk})
 
     def test_delete_recipe_url(self):
