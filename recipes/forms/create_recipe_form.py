@@ -18,6 +18,17 @@ class RecipeForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+        # custom error messages for prep time and servings 
+        self.fields['prep_time'].error_messages.update({
+        'required': 'Please enter the prep time.',
+        'invalid': 'Prep time must be a number.'
+        })
+
+        self.fields['servings'].error_messages.update({
+            'required': 'Please enter the number of servings.',
+            'invalid': 'Servings must be a number.'
+        })
+
     def clean_tags(self):
         tags = self.cleaned_data.get('tags')
         if not tags:
@@ -38,6 +49,16 @@ class RecipeForm(forms.ModelForm):
        
 # this is the Ingredient form specifically in which a user can put their ingredient in
 class RecipeIngredientForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # custom error messages for prep time and servings 
+        self.fields['amount'].error_messages.update({
+            'required': 'Please enter an amount.',
+            'invalid': 'Amount must be a number.'
+        })
+
     class Meta:
         model = RecipeIngredient
         fields = ['name', 'amount', 'unit']
