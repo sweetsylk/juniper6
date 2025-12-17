@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.core.exceptions import ValidationError
+import re
 from ..models import Recipe, RecipeIngredient
 """
 This is the form for creating a recipe that is on the create_recipe.html page
@@ -30,10 +31,28 @@ class RecipeForm(forms.ModelForm):
         })
 
     def clean_tags(self):
-        tags = self.cleaned_data.get('tags')
-        if not tags:
-            raise forms.ValidationError("At least one tag is required.")
-        return tags
+        tags_data = self.cleaned_data.get('tags')
+
+        if not tags_data:
+            raise forms.ValidationError("Please enter at least one tag.")
+
+        # if list then convert to strings
+        if isinstance(tags_data, (list, tuple)):
+            tags = [str(tag) for tag in tags_data]
+        else:
+            # if string then split by spaces
+            tags = tags_data.strip().split()
+
+        # must start with #, letters/numbers/underscore only
+        tag_pattern = re.compile(r'^#[\w]+$')
+        for tag in tags:
+            if not tag_pattern.match(tag):
+                raise forms.ValidationError(
+                    f"Invalid tag format: '{tag}'. Tags must start with '#' and contain no spaces."
+                )
+
+        return tags  
+ 
 
     class Meta:
         model = Recipe
