@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from .user import User  
 from taggit.managers import TaggableManager
 
@@ -6,11 +7,10 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
     title = models.CharField(max_length=255)
     description = models.TextField()
-    prep_time = models.IntegerField() 
-    servings = models.IntegerField() 
-    # instructions = models.TextField()  <-- REMOVE OR COMMENT OUT THIS LINE
+    prep_time = models.IntegerField(validators=[MinValueValidator(1)])   
+    servings = models.IntegerField(validators=[MinValueValidator(1)]) 
     tags = TaggableManager()
-    image = models.ImageField(upload_to='recipe_images/', blank=True, null=True)
+    image = models.ImageField(upload_to='recipe_images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     saved_by = models.ManyToManyField(User, related_name='saved_recipes', blank=True)
@@ -21,7 +21,7 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, related_name='ingredients', on_delete=models.CASCADE)
     name = models.CharField(max_length=100) 
-    amount = models.DecimalField(max_digits=5, decimal_places=2, default = 0) 
+    amount = models.DecimalField(max_digits=5, decimal_places=2, default = 0, validators=[MinValueValidator(0.01)]) 
     
     UNIT_CHOICES = [
         ('g', 'grams'),
