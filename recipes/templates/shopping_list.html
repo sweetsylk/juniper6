@@ -1,0 +1,29 @@
+{% extends 'base_content.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">Shopping List</h3>
+    </div>
+
+    {% if ingredients %}
+    <ul class="list-group">
+        {% for item in ingredients %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ item.name }}</strong>
+            </div>
+            <div>
+                {{ item.total_amount }} {{ item.unit }}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="list-group-item py-5 mb-3 rounded shadow-sm text-center text-muted">
+        No ingredients yet. Save some recipes first.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
