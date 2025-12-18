@@ -4,7 +4,6 @@ from faker_food import FoodProvider
 from random import randint, choices, choice, uniform
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
-# Added RecipeInstruction to imports
 from recipes.models import Recipe, RecipeIngredient, RecipeInstruction, User 
 from recipes.constants import RECIPE_FIXTURES, FOOD_SOURCES
 

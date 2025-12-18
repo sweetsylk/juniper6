@@ -2,7 +2,10 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from .user import User  
 from taggit.managers import TaggableManager
-
+"""
+    Stores a given recipe 
+    One user can have many recipes.
+"""
 class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
     title = models.CharField(max_length=255)
