@@ -47,6 +47,19 @@
             </a>
         </div>
 
+        <div class="col">
+            <a href="{% url 'shopping_list' user.pk %}" class="text-decoration-none">
+                <div class="card text-white">
+                    <img src="{% static 'grey.jpg' %}" class="card-img" alt="Shopping List">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 rounded">
+                        <h4 class="card-title fw-bold">My Shopping List</h4>
+                        <p class="card-text">Aggregated ingredients from saved recipes.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
     </div>
 </div>
 

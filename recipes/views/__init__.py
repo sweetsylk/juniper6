@@ -20,6 +20,7 @@ from .delete_review_view import *
 from .user_recipes_view import *
 from .user_reviews_view import *
 from .follow_unfollow_view import *
+from .shopping_list_view import *
 
 def pass_(request):
     """
