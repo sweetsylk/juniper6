@@ -169,7 +169,7 @@ def create_tags(faker):
         faker.spice
     ]
     n = randint(1, 5) # Reduced max tags for sanity
-    tags = set(gen() for gen in choices(gen_random, k=n))
+    tags = set(gen().split()[0] for gen in choices(gen_random, k=n))
     return list(tags)
 
 def create_image():
