@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     help = "Seed the database with fake recipe reviews"
 
-    REVIEW_COUNT = 1500
+    REVIEW_COUNT = 2000
 
     def __init__(self, *args, **kwargs):
         """Initialise the command with a locale-specific Faker instance."""

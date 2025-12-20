@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.db.models import Avg
 from taggit.models import Tag
 from recipes.models import Recipe
 
@@ -16,6 +17,7 @@ def tag_lookup(request, tag):
     # Filter recipes by tag, newest first
     filtered_recipes = (
         Recipe.objects.filter(tags=tag_obj)
+        .annotate(avg_rating=Avg("reviews__rating"))
         .order_by('-updated_at')
         .distinct()
     )

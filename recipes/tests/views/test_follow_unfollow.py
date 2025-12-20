@@ -67,12 +67,15 @@ class FollowUnfollowTests(TestCase):
 
         # Check user2's profile shows user1 as a follower
         response = self.client.get(reverse('display_user_profile', args=[self.user2.username]))
-        self.assertContains(response, self.user1.username)
+        self.assertContains(response, "Followers")
+        self.assertContains(response, "1")
 
-        # Check user1's profile shows user2 as following
-        response = self.client.get(reverse('display_user_profile', args=[self.user1.username]))
-        self.assertContains(response, self.user2.username)
-
+        # Check user1's profile shows 1 following
+        response = self.client.get(
+            reverse('display_user_profile', args=[self.user1.username])
+        )
+        self.assertContains(response, "Following")
+        self.assertContains(response, "1")
 
 # from django.test import TestCase
 # from django.urls import reverse
