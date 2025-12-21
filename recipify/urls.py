@@ -39,10 +39,10 @@ urlpatterns = [
     path('settings/password/', views.PasswordUpdateView.as_view(), name='update_password'),
     path('settings/filters/', views.pass_, name='update_filters'), 
 
-    path('users/user/', views.ProfileDetailView.as_view(), name='display_user_profile'),
+    path('user/', views.ProfileDetailView.as_view(), name='display_user_profile'),
+    path('user/feed', views.UserFeedDetailView.as_view(), name='display_user_feed'),
+
     path('users/<str:username>/', views.ProfileDetailView.as_view(), name='display_user_profile'),
-    path('users/<int:pk>/recipes/', views.pass_, name='display_user_recipes'),
-    path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
     path('users/<int:pk>/saves/', views.SavedRecipesView.as_view(), name='display_saved_recipes'),
     path('users/<int:pk>/toggle-follow/', views.FollowUnfollowView.as_view(), name='toggle-follow'),
     path('users/<int:pk>/shopping-list/', views.ShoppingListView.as_view(), name='shopping_list'),

@@ -17,9 +17,49 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     saved_by = models.ManyToManyField(User, related_name='saved_recipes', blank=True)
+    similar = models.ManyToManyField(
+        'self', 
+        through='RecipeSimilar', 
+        related_name='similars', 
+        blank=True, 
+        symmetrical=True
+    )
 
     def __str__(self):
         return self.title
+    
+    def add_similar(self, recipes):
+        for r in recipes:
+            A, B = min(self.pk, r.pk), max(self.pk, r.pk)
+            rs, created = RecipeSimilar.objects.get_or_create(recipe_A_id=A, recipe_B_id=B)
+            if not created: 
+                rs.similarity_score=models.F('similarity_score') + 1
+                rs.save()
+
+    def get_similar(self):
+        #want to return recipes with highest similarity scores first
+        pass
+
+
+class RecipeSimilar(models.Model):
+    recipe_A = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe_B = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    similarity_score = models.IntegerField(default=0)
+
+    #override save() to normalise ordering for simpler querying
+    def save(self, *args, **kwargs):
+        if self.recipe_A.pk > self.recipe_B.pk:
+            self.recipe_A, self.recipe_B = self.recipe_B, self.recipe_A
+        super().save(*args, **kwargs)
+
+    class Meta:
+        # if row (A,B,x), do not make another row (A,B,y)
+        constraints =[
+            models.UniqueConstraint(fields=['recipe_A','recipe_B'], name="unique_similar_recipes")
+        ]
+
+        ordering = ['-similarity_score'] #order by highest similarity score first
+
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, related_name='ingredients', on_delete=models.CASCADE)

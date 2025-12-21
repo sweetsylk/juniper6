@@ -17,7 +17,7 @@ class UserProfileViewTestCase(TestCase, LogInTester):
         self.url = reverse('display_user_profile')
 
     def test_profile_url(self):
-        self.assertEqual(self.url, '/users/user/')
+        self.assertEqual(self.url, '/user/')
 
     def test_get_profile_view_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('log_in',self.url)

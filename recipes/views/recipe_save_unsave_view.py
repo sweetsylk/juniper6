@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from recipes.models.recipe import Recipe
 from django.http import JsonResponse
-
+from signals.signals import recipe_saved
 
 
 class SaveUnsaveRecipeView(LoginRequiredMixin, View):
