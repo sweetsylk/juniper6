@@ -1,0 +1,11 @@
+[
+  {
+    "model": "recipes.recipesimilar",
+    "pk": 1,
+    "fields": {
+      "recipe_A": 1,
+      "recipe_B": 2,
+      "similarity_Score": 3
+    }
+  }
+]

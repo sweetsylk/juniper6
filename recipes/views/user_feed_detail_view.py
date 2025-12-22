@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from recipes.models import User, Recipe, RecipeReview
 
 """
@@ -25,14 +26,18 @@ home feed should exclude recipes you've already liked and saved?
 
 """
 
-class UserFeedDetailView(LoginRequiredMixin):
+class UserFeedDetailView(LoginRequiredMixin, TemplateView):
     """ 
     Display the logged in user's home feed 
     """
-    model = User 
-    template_name = "display_user_profile.html"
-    context_object_name = "users"
+    template_name = "user_feed.html"
+    context_object_name = "data"
 
-    
+    def get_queryset(self):
+        context = super().get_context_data()
+        context['users'] = User.objects.all()
+        context['reviews'] = RecipeReview.objects.all()
+        context['recipes'] = Recipe.objects.all()
 
+        return context
 
