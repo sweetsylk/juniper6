@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from recipes.models import User, Recipe, RecipeReview
 
@@ -36,14 +37,35 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         user = self.get_object()
 
+        user_recipes = (
+            Recipe.objects
+            .filter(author=user)
+            .annotate(avg_rating=Avg("reviews__rating"))
+        )
+
         # Recipes written by the user
-        user_recipes = Recipe.objects.filter(author=user)
         context["user_recipes"] = user_recipes
         context["recipe_count"] = user_recipes.count()
         context["date_joined"] = user.date_joined
+        context["saved_count"] = user.saved_recipes.count()
 
         # All reviews written by the user
-        user_reviews = RecipeReview.objects.filter(user=user).select_related("recipe")
-        context["user_reviews"] = user_reviews
-        
+        context["user_reviews"] = (
+            RecipeReview.objects
+            .filter(user=user)
+            .select_related("recipe")
+        )
+
+        # Followers and following users
+        context["followers"] = user.followers.all()
+        context["following"] = user.following.all()
+
+        # Followers and following count
+        context["follower_count"] = user.followers.count()
+        context["following_count"] = user.following.count()
+
+        # Flag used by the template to switch between full profile view
+        # and recipes-only view (overridden via URL extra_context).
+        context.setdefault("show_recipes_only", False)
+
         return context

@@ -5,7 +5,6 @@ from recipes.models.recipe import Recipe
 from django.http import JsonResponse
 
 
-
 class SaveUnsaveRecipeView(LoginRequiredMixin, View):
     """Toggle saving or unsaving a recipe for a logged-in user"""
 

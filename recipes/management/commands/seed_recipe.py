@@ -1,10 +1,10 @@
 import requests
 from faker import Faker
 from faker_food import FoodProvider
-from random import randint, choices, choice, uniform
+from random import randint, choices, choice, sample
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
-from recipes.models import Recipe, RecipeIngredient, User # Imported RecipeIngredient
+from recipes.models import Recipe, RecipeIngredient, RecipeInstruction, User 
 from recipes.constants import RECIPE_FIXTURES, FOOD_SOURCES
 
 
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     Build automation command to seed the recipes database with data.
     """
 
-    RECIPE_COUNT = 500
+    RECIPE_COUNT = 750
     help = 'Seeds the database with sample data'
 
     def __init__(self, *args, **kwargs):
@@ -41,6 +41,7 @@ class Command(BaseCommand):
             print(f"Seeding recipe {recipe_count}/{self.RECIPE_COUNT}", end='\r')
             self.generate_recipe()
             recipe_count = Recipe.objects.count()
+        self.generate_saves()
         print("Recipe seeding complete.      ")
 
     def generate_recipe(self):
@@ -52,7 +53,10 @@ class Command(BaseCommand):
         description = self.faker.dish_description()
         prep_time = self.faker.random_int(min=5, max=120)
         servings = self.faker.random_int(min=1, max=10)
-        instructions = self.faker.paragraph()
+        
+        # UPDATED: Generate a list of separate instruction steps
+        instructions_list = [self.faker.sentence() for _ in range(randint(3, 8))]
+        
         created_at = self.faker.date_time_between(start_date='-2y', end_date='now')
         updated_at = self.faker.date_time_between(start_date=created_at, end_date='now')
         tags = create_tags(self.faker)
@@ -67,7 +71,7 @@ class Command(BaseCommand):
             "description": description,
             "prep_time": prep_time,
             "servings": servings,
-            "instructions": instructions,
+            "instructions": instructions_list, # Pass the list
             "tags": tags,
             "image": img_data,
             "created_at": created_at,
@@ -86,17 +90,16 @@ class Command(BaseCommand):
         """
         Create a recipe and its related ingredients.
         """
-        # 1. Extract ingredients from data so we don't pass it to Recipe.create
+        # 1. Extract complex data so we don't pass it to Recipe.create
         ingredients_data = data.pop('ingredients', []) 
-        
-        # 2. Extract tags and image
+        instructions_data = data.pop('instructions', []) # Extract instructions
         tags = data.pop('tags', [])
         image_data = data.pop('image', None)
 
-        # 3. Create the base Recipe
+        # 2. Create the base Recipe
         recipe = Recipe.objects.create(**data)
 
-        # 4. Save Image
+        # 3. Save Image
         if image_data:
             recipe.image.save(
                 f"recipe_{recipe.id}.jpg",
@@ -104,8 +107,19 @@ class Command(BaseCommand):
                 save=True
             )
 
-        # 5. Set Tags
+        # 4. Set Tags
         recipe.tags.set(tags)
+
+        # 5. Create Instructions (UPDATED)
+        if isinstance(instructions_data, str):
+            # Fallback for old fixtures: split string by periods
+            steps = [s.strip() for s in instructions_data.split('.') if s.strip()]
+            for i, step in enumerate(steps, 1):
+                RecipeInstruction.objects.create(recipe=recipe, step_number=i, text=step)
+        elif isinstance(instructions_data, list):
+            # Handle new list format
+            for i, step in enumerate(instructions_data, 1):
+                RecipeInstruction.objects.create(recipe=recipe, step_number=i, text=step)
 
         # 6. Create Ingredients (The new part)
         # We check if ingredients_data is a string (old fixtures) or list (new randoms)
@@ -128,6 +142,16 @@ class Command(BaseCommand):
                     amount=ing['amount'],
                     unit=ing['unit']
                 )
+    
+    def generate_saves(self):
+        recipes = list(Recipe.objects.all())
+        users = list(User.objects.all())
+        for  i in range(randint(0, int(len(users)*0.95))):
+            r = choice(recipes)
+            recipes.remove(r)
+            u = sample(users, randint(0, int(len(users)*0.1)))
+            r.saved_by.add(*u)
+            recipes.append(r)
 
 def create_ingredients_list(faker):
     """
@@ -135,7 +159,8 @@ def create_ingredients_list(faker):
     Returns: [{'name': 'Salt', 'amount': 10, 'unit': 'g'}, ...]
     """
     ingredients = []
-    valid_units = ['g', 'kg', 'ml', 'l', 'cup', 'tbsp', 'tsp', 'pcs']
+    # Removed 'pcs' to match your model choices
+    valid_units = ['g', 'kg', 'ml', 'l', 'cup', 'tbsp', 'tsp'] 
     
     # Generate 3 to 12 ingredients
     for _ in range(randint(3, 12)): 
@@ -155,7 +180,7 @@ def create_tags(faker):
         faker.spice
     ]
     n = randint(1, 5) # Reduced max tags for sanity
-    tags = set(gen() for gen in choices(gen_random, k=n))
+    tags = set(gen().split()[0] for gen in choices(gen_random, k=n))
     return list(tags)
 
 def create_image():
@@ -164,4 +189,4 @@ def create_image():
         img_data = requests.get(img_url, timeout=5).content
         return img_data
     except:
-        return None # Return None if image fetch fails so script continues
+        return None # Return None if image fetch fails so script continues also plesae dont add nor remove comments

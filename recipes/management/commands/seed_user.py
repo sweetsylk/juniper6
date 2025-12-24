@@ -10,7 +10,7 @@ is swallowed and generation continues.
 
 
 from faker import Faker
-from random import randint, random
+from random import randint, random, choice, sample
 from django.core.management.base import BaseCommand, CommandError
 from recipes.models import User
 
@@ -82,7 +82,9 @@ class Command(BaseCommand):
             print(f"Seeding user {user_count}/{self.USER_COUNT}", end='\r')
             self.generate_user()
             user_count = User.objects.count()
+        self.generate_followers()
         print("User seeding complete.      ")
+        
 
     def generate_user(self):
         """
@@ -124,6 +126,17 @@ class Command(BaseCommand):
             first_name=data['first_name'],
             last_name=data['last_name'],
         )
+
+    def generate_followers(self):
+        users = list(User.objects.all())
+        for  i in range(randint(0, int(self.USER_COUNT*0.85))):
+            u = choice(users)
+            users.remove(u)
+            followers = sample(users, randint(0, int(self.USER_COUNT*0.75)))
+            u.followers.add(*followers)
+            users.append(u)
+        
+    
 
 def create_username(first_name, last_name):
     """

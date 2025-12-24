@@ -16,7 +16,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'profile_image']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_cuisine', 'cooking_level', 'dietary_style']
 
 class NewPasswordMixin(forms.Form):
     """

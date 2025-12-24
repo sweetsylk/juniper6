@@ -1,73 +1,83 @@
 {% extends 'base_content.html' %}
+{% load static %}
+
 {% block content %}
-{% load static%}
+<style>
+    .dashboard-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
 
-<!--Display the logged in user's activity- the recipes they've made, drafed, liked, saved, rated, 
-    commented on, etc.
-    Could add option to make activity/specific activities public or private, like your
-    saves or ratings and reviews -->
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+    }
 
-<div class="container-fluid">
+    .card-link-text {
+        color: #212529;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+</style>
 
-  <div class="jumbotron mb-3 mt-3 p-3 p-md-5 text-white rounded bg-dark">
-    <div class="col-md-6 px-0">
-     <h1 style="text-align: center;"><b>Welcome to your Dashboard {{ user.username }}</b></h1>
+<div class="container my-4">
+    <div class="p-4 bg-dark text-white rounded text-center shadow-sm mb-5">
+        <h1 class="fw-bold">Welcome to your Dashboard, {{ user.username }}</h1>
     </div>
 
+    <div class="row row-cols-1 row-cols-md-2 g-5">
+
+        <div class="col">
+            <a href="{% url 'display_saved_recipes' user.pk %}" class="text-decoration-none card-link-text">
+                <h5 class="fw-bold mb-0">Saved Recipes</h5>
+                <p class="text-muted small">Recipes you’ve bookmarked.</p>
+                <div class="card dashboard-card border-0 shadow-sm overflow-hidden bg-dark">
+                    <div class="ratio ratio-21x9">
+                        <img src="{% static 'savedrecipes.jpg' %}" class="card-img" alt="Saved"
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{% url 'dashboard_my_recipes' %}" class="text-decoration-none card-link-text">
+                <h5 class="fw-bold mb-0">My Recipes</h5>
+                <p class="text-muted small">Everything you’ve created.</p>
+                <div class="card dashboard-card border-0 shadow-sm overflow-hidden bg-dark">
+                    <div class="ratio ratio-21x9">
+                        <img src="{% static 'myrecipes.jpg' %}" class="card-img" alt="My Recipes"
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{% url 'dashboard_my_reviews' %}" class="text-decoration-none card-link-text">
+                <h5 class="fw-bold mb-0">My Reviews</h5>
+                <p class="text-muted small">Reviews you have written.</p>
+                <div class="card dashboard-card border-0 shadow-sm overflow-hidden bg-dark">
+                    <div class="ratio ratio-21x9">
+                        <img src="{% static 'myreview.jpg' %}" class="card-img" alt="Reviews"
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{% url 'shopping_list' user.pk %}" class="text-decoration-none card-link-text">
+                <h5 class="fw-bold mb-0">My Shopping List</h5>
+                <p class="text-muted small">Combined ingredients from saved recipes.</p>
+                <div class="card dashboard-card border-0 shadow-sm overflow-hidden bg-dark">
+                    <div class="ratio ratio-21x9">
+                        <img src="{% static 'shoppinglist.jpg' %}" class="card-img" alt="Shopping List"
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
 </div>
-
-<div class="container mb-3">
-  <div class="row row-cols-1 row-cols-md-2 g-4">
-
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View your drafts</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col d-flex">
-      <a href="{% url 'display_saved_recipes' request.user.pk %}" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View your saved recipes</h5>
-            <p class="card-text">text</p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View Your Reviews and Ratings</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col d-flex">
-      <a href="#" class="text-decoration-none">
-        <div class="card flex-fill text-white">
-          <img class="card-img" src="{% static 'grey.jpg' %}" alt="Card image">
-          <div class="card-img-overlay">
-            <h5 class="card-title">View Your Recently Deleted</h5>
-            <p class="card-text">This is a wider card.</p>
-          </div>
-        </div>
-      </a>
-    </div>
-  </div>
-
-</div>
-
 {% endblock %}

@@ -16,6 +16,12 @@ from .recipe_delete_view import *
 from .recipe_save_unsave_view import *
 from .saved_recipes_view import *
 from .create_review_view import *
+from .delete_review_view import *
+from .user_recipes_view import *
+from .user_reviews_view import *
+from .follow_unfollow_view import *
+from .shopping_list_view import *
+from .user_feed_detail_view import *
 
 def pass_(request):
     """

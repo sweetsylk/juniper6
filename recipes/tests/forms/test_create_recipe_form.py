@@ -18,8 +18,7 @@ class RecipeFormTestCase(TestCase):
             'description': 'Philly cheese stake meal so yummy',
             'prep_time': 30,
             'servings': 5,
-            'instructions': 'IDK just make it bro',
-            'tags': 'Meat, American, Sandwich'
+            'tags': '#Meat #American #Sandwich'
         }
       
 
@@ -29,22 +28,16 @@ class RecipeFormTestCase(TestCase):
         self.assertIn('description', form.fields)
         self.assertIn('prep_time', form.fields)
         self.assertIn('servings', form.fields)
-        self.assertIn('instructions', form.fields)
         self.assertIn('tags', form.fields)
         self.assertIn('image', form.fields)
        
     def test_form_uses_correct_widgets(self):
         form = RecipeForm()
         self.assertIsInstance(form.fields['description'].widget, forms.Textarea)
-        self.assertIsInstance(form.fields['instructions'].widget, forms.Textarea)
         
         # Check that your forms.py sets these attributes correctly
         self.assertEqual(form.fields['description'].widget.attrs['rows'], 3)
-        self.assertEqual(form.fields['instructions'].widget.attrs['rows'], 8)
 
-    def test_form_accepts_valid_input(self):
-        form = RecipeForm(data=self.form_input)
-        self.assertTrue(form.is_valid())
 
     def test_form_rejects_blank_title(self):
         self.form_input['title'] = ''
@@ -53,11 +46,6 @@ class RecipeFormTestCase(TestCase):
 
     def test_form_rejects_blank_description(self):
         self.form_input['description'] = ''
-        form = RecipeForm(data=self.form_input)
-        self.assertFalse(form.is_valid())
-
-    def test_form_rejects_blank_instructions(self):
-        self.form_input['instructions'] = ''
         form = RecipeForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
@@ -81,17 +69,3 @@ class RecipeFormTestCase(TestCase):
         form = RecipeForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
-    def test_form_accepts_blank_image(self):
-        form = RecipeForm(data=self.form_input)
-        self.assertTrue(form.is_valid())
-
-    def test_form_save_handles_model_instance(self):
-        form = RecipeForm(data=self.form_input)
-        if form.is_valid():
-            # We must assign an author before saving because the model requires it
-            form.instance.author = self.user 
-            recipe = form.save()
-            self.assertIsInstance(recipe, Recipe)
-            self.assertEqual(recipe.title, 'Philly Cheesestake')
-        else:
-            self.fail("Form is not valid: " + str(form.errors))

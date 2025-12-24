@@ -1,6 +1,4 @@
 {% extends 'base_content.html' %}
-<!--Displays the page for the user to create recipes in. it is a form page.
-Users can input a title, description, prep time. a NOW variable amount of ingredients, servings, instructions, tags and they can optionally add an image -->
 
 {% block content %}
 <div class="container">
@@ -24,9 +22,15 @@ Users can input a title, description, prep time. a NOW variable amount of ingred
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Prep Time</label>
+          <label class="form-label">Prep Time (minutes)</label>
           {{ form.prep_time }}
           {{ form.prep_time.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Servings</label>
+          {{ form.servings }}
+          {{ form.servings.errors }}
         </div>
 
         <hr class="my-4">
@@ -80,16 +84,43 @@ Users can input a title, description, prep time. a NOW variable amount of ingred
         </div>
 
         <hr class="my-4">
+        <h4 class="mb-3">Instructions</h4>
+
+        {{ instructions.management_form }}
+        {{ instructions.non_form_errors }}
+
+        {% for instruction_form in instructions %}
+        {% for hidden in instruction_form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+
+        <div class="row mb-3">
+          <div class="col-10">
+            <label class="form-label small text-muted">Step {{ forloop.counter }}</label>
+            {{ instruction_form.text }}
+            {% if instruction_form.text.errors %}
+            <div class="text-danger small">{{ instruction_form.text.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-2 text-center d-flex flex-column justify-content-center">
+            <label class="fw-bold text-muted small mb-1">Del</label>
+            {% if instructions.can_delete %}
+            <div class="form-check d-flex justify-content-center">
+              {{ instruction_form.DELETE }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
 
         <div class="mb-3">
-          <label class="form-label">Servings</label>
-          {{ form.servings }} {{ form.servings.errors }}
+          <button type="submit" name="add_instruction" class="btn btn-outline-secondary btn-sm">
+            + Add Step
+          </button>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Instructions</label>
-          {{ form.instructions }} {{ form.instructions.errors }}
-        </div>
+        <hr class="my-4">
 
         <div class="mb-3">
           <label class="form-label">Tags</label>

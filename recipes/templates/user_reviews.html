@@ -1,0 +1,74 @@
+{% extends 'base_content.html' %}
+{% block content %}
+
+<div class="container my-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">My Reviews</h3>
+    </div>
+
+    {% if user_reviews %}
+    <div class="list-group">
+        {% for review in user_reviews %}
+        <div class="list-group-item py-3 mb-3 rounded shadow-sm">
+            <div class="d-flex align-items-center">
+
+                {% if review.recipe.image %}
+                <img src="{{ review.recipe.image.url }}" class="rounded me-3"
+                     style="width: 90px; height: 90px; object-fit: cover;">
+                {% endif %}
+
+                <div class="flex-grow-1">
+                    <h5 class="mb-1">{{ review.recipe.title }}</h5>
+
+                    <p class="text-muted mb-1">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    {% if review.comment %}
+                    <p class="mb-1"><strong>Comment:</strong> {{ review.comment }}</p>
+                    {% endif %}
+
+                    <small class="text-muted">
+                        Reviewed on {{ review.created_at|date:"F j, Y" }}
+                    </small>
+                </div>
+
+                <div class="ms-3 d-flex align-items-center">
+
+                    <a href="{% url 'display_recipe' review.recipe.pk %}" 
+                       class="link-secondary me-3">
+                        <i class="bi bi-eye-fill fs-5"></i>
+                    </a>
+
+                    <div class="vr me-3"></div>
+
+                    <form method="POST" action="{% url 'delete_review' review.recipe.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn p-0 border-0 bg-transparent text-danger">
+                            <i class="bi bi-trash fs-5"></i>
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="list-group-item py-5 mb-3 rounded shadow-sm text-center text-muted">
+        You have not written any reviews yet.
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

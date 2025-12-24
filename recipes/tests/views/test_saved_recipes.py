@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from recipes.models.recipe import Recipe
+from recipes.models import User, Recipe, RecipeIngredient, RecipeInstruction
 from recipes.models.user import User
 
 class SavedRecipesViewTests(TestCase):
@@ -25,8 +25,8 @@ class SavedRecipesViewTests(TestCase):
             description='Test recipe one',
             prep_time=10,
             servings=2,
-            instructions='Do something'
         )
+        RecipeInstruction.objects.create(recipe=self.recipe1, text='Do something')
 
         self.recipe2 = Recipe.objects.create(
             author=self.user2,
@@ -34,9 +34,8 @@ class SavedRecipesViewTests(TestCase):
             description='Test recipe two',
             prep_time=15,
             servings=4,
-            instructions='Do something else'
         )
-
+        RecipeInstruction.objects.create(recipe=self.recipe2, text='Do something else')
         # User1 saves recipe2
         self.recipe2.saved_by.add(self.user1)
 

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from recipes.models import Recipe, User, RecipeIngredient
+# 1. Add RecipeInstruction to imports
+from recipes.models import Recipe, User, RecipeIngredient, RecipeInstruction
 from taggit.models import Tag
 from datetime import datetime
 
@@ -22,8 +23,7 @@ class SearchResultsViewTests(TestCase):
             'user3': User.objects.create(username='user3', email='user3@example.com')
         }
         
-        # Seed recipes data (We keep ingredients as a string here for easy reading, 
-        # but we will process it manually below)
+        # Seed recipes data
         recipe_data = [
             {
                 "author": self.users['user1'],
@@ -80,12 +80,23 @@ class SearchResultsViewTests(TestCase):
         self.tags = {}
         
         for data in recipe_data:
+            # 2. Extract instructions along with ingredients/tags
             ingredients_str = data.pop('ingredients')
+            instructions_str = data.pop('instructions') # <--- POP INSTRUCTIONS
             tag_names = data.pop('tags')
+            
+            # Now data does not contain 'instructions', so this won't crash
             recipe = Recipe.objects.create(**data)
+            
             item_names = [x.strip() for x in ingredients_str.split(',')]
-
             self.recipes.append(recipe)
+            
+            # Create Instructions
+            RecipeInstruction.objects.create(
+                recipe=recipe, 
+                text=instructions_str, 
+                step_number=1
+            )
             
             # Create ingredients
             for name in item_names:
@@ -125,16 +136,18 @@ class SearchResultsViewTests(TestCase):
         """Searching returns results with correct pagination."""
       
         for i in range(20):
-            Recipe.objects.create(
+            # 3. Update pagination loop to create instruction separately
+            r = Recipe.objects.create(
                 author=self.users['user1'],
                 title=f"Extra Recipe {i}",
                 description="Extra test recipe",
                 prep_time=10,
                 servings=1,
-                instructions="Test instructions",
+                # instructions="Test instructions", <--- REMOVED
                 created_at=datetime(2025, 1, 1, 12, 0),
                 updated_at=datetime(2025, 1, 1, 12, 0)
             )
+            RecipeInstruction.objects.create(recipe=r, text="Test instructions")
 
         response = self.client.get(reverse('search_results'), {'search': 'Extra'})
         self.assertEqual(response.status_code, 200)
@@ -148,7 +161,6 @@ class SearchResultsViewTests(TestCase):
         response = self.client.get(reverse('search_results'), {'search': 'user2'})
         self.assertEqual(response.status_code, 200)
     
-        
         self.assertContains(response, 'Chicken Salad')
         self.assertContains(response, 'Cereal')
     
@@ -170,7 +182,6 @@ class SearchResultsViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'No recipes found')
         
-       
         self.assertNotContains(response, 'Chicken and Rice')
         self.assertNotContains(response, 'Chicken Salad')
         self.assertNotContains(response, 'Fairy Cakes')
@@ -253,5 +264,3 @@ class SearchResultsViewTests(TestCase):
         response = self.client.get(reverse('search_results'), {'search': '#VeGaN #EaSy'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Chicken Salad')
-
-

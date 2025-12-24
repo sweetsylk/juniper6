@@ -24,6 +24,70 @@ class User(AbstractUser):
         null=True
     )
 
+    # Free-text biography describing the user's cooking style or interests
+    bio = models.TextField(
+        blank= True,
+        max_length=700,
+        help_text="Tell others about your cooking style, inspirations, or favourite flavours."
+    )
+
+    # User's preferred cuisine (free text for flexibility)
+    favourite_cuisine = models.CharField(
+        max_length=50,
+        blank=True    
+    )
+
+    # Fixed set of cooking experience levels
+    COOKING_LEVELS = [
+        ("beginner", "Beginner"),
+        ("home_cook", "Home Cook"),
+        ("advanced", "Advanced"),
+    ]
+
+    # User-selected cooking level
+    cooking_level = models.CharField(
+        max_length=20,
+        choices=COOKING_LEVELS,
+        blank=True,
+        null=True
+    )
+
+    # Supported dietary preferences
+    DIETARY_STYLES = [
+        ("none", "No specific diet"),
+        ("vegetarian", "Vegetarian"),
+        ("vegan", "Vegan"),
+        ("halal", "Halal"),
+        ("gluten_free", "Gluten Free"),
+    ]
+
+    # User-selected dietary style
+    dietary_style = models.CharField(
+        max_length=20,
+        choices=DIETARY_STYLES,
+        blank=True,
+        null=True
+    )
+
+    # Users who follow this user
+    followers = models.ManyToManyField(
+        'self',
+        symmetrical=False, # following is directional (can follow without being followed back)
+        related_name='following',   # the user this user follows
+        blank=True
+    )
+
+    def follow(self, other_user):
+        """Follow another user, cannot follow yourself"""
+
+        if self != other_user:
+            other_user.followers.add(self)
+
+    def unfollow(self, other_user):
+        """Unfollow a user"""
+
+        other_user.followers.remove(self)
+
     class Meta:
         """Model options."""
 

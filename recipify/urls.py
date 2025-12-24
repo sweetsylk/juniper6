@@ -39,18 +39,27 @@ urlpatterns = [
     path('settings/password/', views.PasswordUpdateView.as_view(), name='update_password'),
     path('settings/filters/', views.pass_, name='update_filters'), 
 
-    path('users/user/', views.ProfileDetailView.as_view(), name='display_user_profile'),
+    path('user/', views.ProfileDetailView.as_view(), name='display_user_profile'),
+    path('user/feed', views.UserFeedDetailView.as_view(), name='display_user_feed'),
+
     path('users/<str:username>/', views.ProfileDetailView.as_view(), name='display_user_profile'),
-    path('users/<int:pk>/recipes/', views.pass_, name='display_user_recipes'),
-    path('users/<int:pk>/reviews/', views.pass_, name='display_reviewed_recipes'), 
     path('users/<int:pk>/saves/', views.SavedRecipesView.as_view(), name='display_saved_recipes'),
+    path('users/<int:pk>/toggle-follow/', views.FollowUnfollowView.as_view(), name='toggle-follow'),
+    path('users/<int:pk>/shopping-list/', views.ShoppingListView.as_view(), name='shopping_list'),
 
     path('recipes/create/', views.RecipeCreateView.as_view(), name='create_recipe'),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='display_recipe'),
     path('recipes/<int:pk>/update/', views.RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipes/<int:pk>/delete/', views.RecipeDeleteView.as_view(), name='delete_recipe'),
     path('recipes/<int:pk>/save/', views.SaveUnsaveRecipeView.as_view(), name='save_unsave_recipe'),
-    path('recipes/<int:pk>/review/', views.CreateRecipeReviewView.as_view(), name="recipe_review"),
+    path('recipes/<int:pk>/reviews/', views.RecipeReviewsView.as_view(), name="recipe_reviews"),
+
+    path('recipes/<int:pk>/reviews/delete/', views.DeleteReviewView.as_view(), name="delete_review"),
+    path('dashboard/my-recipes/', views.MyRecipesView.as_view(), name='dashboard_my_recipes'),
+    path("dashboard/my-reviews/", views.MyReviewsView.as_view(), name="dashboard_my_reviews"),
+
+    path('users/<str:username>/recipes/',views.ProfileDetailView.as_view(extra_context={"show_recipes_only": True} ), name='display_other_users_recipes'),
+
 
     path('tags/<str:tag>/', views.tag_lookup, name='display_tag'), 
 ]

@@ -958,6 +958,21 @@ FodyWeavers.xsd
 
 # ignore the images uploaded
 /media/
+
+
+!static/savedrecipes.jpg
+!static/myrecipes.jpg
+!static/myreview.jpg
+!static/shoppinglist.jpg
+!static/tiramisu.jpg
+!static/fishandchips.jpg
+!static/mission.jpg
+!static/souvlaki/jpg
+!static/about.jpg
+!static/social.jpg
+
+*.Zone.Identifier
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
