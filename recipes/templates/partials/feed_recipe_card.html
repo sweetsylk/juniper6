@@ -1,0 +1,37 @@
+
+<div class="card mx-auto mb-3">
+
+    {% if recipe.image %}
+    <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}"
+      class="card-img-top img-fluid rc-img-format">
+    {% else %}
+    <p>No image uploaded</p>
+    {% endif %}
+
+    <div class="card-body">
+        {% if user in recipe.author.followers.all %}
+            <span class="badge bg-secondary">Reccomended for you</span>
+            <h4 class="card-title pt-1">
+                <a class="link dark-link" href="{% url 'display_recipe' recipe.pk %}">
+                    {{ recipe.title }}
+                </a>
+            </h4>
+             <p class="card-text">
+                <a class="link grey-link" 
+                href="{% url 'display_user_profile' recipe.author.username %}">
+                {{ recipe.author.username }}</a></p>
+        {% else %}
+            <span class="badge bg-success pt-1">In your following</span>
+            <h4 class="card-text"><a class="link grey-link" 
+                href="{% url 'display_user_profile' recipe.author.username %}">
+                {{ recipe.author.username }}</a></h4>
+            <p class="card-title">
+                <a class="link dark-link" href="{% url 'display_recipe' recipe.pk %}">
+                    {{ recipe.title }}
+                </a>
+            </p>
+            
+        {% endif %}
+       
+    </div>
+</div>

@@ -56,8 +56,9 @@ class Command(BaseCommand):
                 continue
 
             comment = choice(REVIEW_COMMENTS)
+            created_at = self.faker.date_time_between(start_date='-2y', end_date='now')
 
-            RecipeReview.objects.create(user=user, recipe=recipe, rating=randint(1,5), comment=comment, )
+            RecipeReview.objects.create(user=user, recipe=recipe, rating=randint(1,5), comment=comment, created_at=created_at)
 
             created += 1
             print(f"Seeding review {created}/{self.REVIEW_COUNT}", end="\r")

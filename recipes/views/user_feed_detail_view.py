@@ -1,49 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator
 from recipes.models import User, Recipe, RecipeReview
+import random
 
 """
-GOALS
-
 "what you saved, friends, tags from what you saved"
 
-let you follow tags and hence home feed will show you what is trending in each tag
-if a tag you follow is trending it will prompt you to check it out
-will show you new posts from people you follow
-will show you comments made on recipes you commented on
-
-include have sections- 'because you liked/saved/followed xyz'
-    and it will show you posts that other other people who liked that post also liked.
-    posts that were liked a lot among fellow like-ees will be shown first
-    and same for follows and saves
-    by liked i mean 'rated 5 stars', that will go first, then 4 star ratings
-
-should feed be existing and waiting for you? always generated, stored and updated and loaded when
-you click on feed, or it should be calulcated when you load the page?
-the second option feels like a waste
-
-home feed should exclude recipes you've already liked and saved?
-
-"""
-"""
-Look at people you follow- things they liked should be shown to you too?
-if 2 users follow the same person
-
-    maybe should be a number then- you guys didn't match again for x number of interactions
-    hence remove
-    which parties interactions would guarentee this?
-    okay, relationship should by asymetrical then
-    tbf, i could like a lot of things you like, but you might not like stuff I like
-    so if we are matched, add both directions, and then if A doesnt get B
-    matched to them again after x interactions, then remove row (A, B, x), but not (B, A, y)
-    because B might like stuff A likes, but A doesnt like stuff B likes
-    then get_similars would just:
-    order sim table by (field[0] = B, -field[2])
-    and return all field[1] (if doomscrolling) or first x field[1] if not
-    then we give template the list of user objects
-    it takes first y of their recent saves, and positive reviews
-
-    IF YOU RATED SOMETHING POORLY shout not be recommended to you!
+new reviews on posts you reviewed- 
+new posts from people you follow- 
+new posts from tags you follow- 
 """
 
 
@@ -54,11 +20,53 @@ class UserFeedDetailView(LoginRequiredMixin, TemplateView):
     template_name = "user_feed.html"
     context_object_name = "data"
 
-    def get_queryset(self):
-        context = super().get_context_data()
-        context['users'] = User.objects.all()
-        context['reviews'] = RecipeReview.objects.all()
-        context['recipes'] = Recipe.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        #find recipes user enjoyed to generate recs from
+        recs = set()
+        saves = user.saved_recipes.order_by('?')[:10]
+        pos_reviewed = Recipe.objects.filter(
+            reviews__user = user,
+            reviews__rating__gte=4,
+        )[:10]
+
+        for recipe in saves: recs.update(recipe.get_similar(10))
+        for recipe in pos_reviewed: recs.update(recipe.get_similar(10))
+        print(recs)
+        
+        
+        unseen_reviews = list(RecipeReview.objects.filter(
+            recipe__in=RecipeReview.objects.filter(user=user).values("recipe"),
+        ).exclude(user=user).order_by("-created_at"))[:50]
+        
+        
+        unseen_posts = list(Recipe.objects.filter(
+            author__followers=user,
+        ).order_by("-created_at"))[:200]
+
+        print(len(recs))
+        print(len(unseen_reviews))
+        print(len(unseen_posts))
+        feed_data = list(recs) + unseen_reviews + unseen_posts
+        random.shuffle(feed_data)
+        random.shuffle(feed_data)
+        print(len(feed_data))
+
+        try: 
+            p = Paginator(feed_data, len(feed_data)/3)
+            context["col1"] = p.get_page(1)
+            context["col2"] = p.get_page(2)
+            context["col3"] = p.get_page(3)
+            pages = True
+        
+        except ZeroDivisionError: 
+            pages = False
+   
+        context["user"] = user
+        context["feed_data"] = feed_data
+        context["pages"] = pages
 
         return context
 

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block body %}
+  {% include 'partials/navbar.html' %}
+  {% include 'partials/messages.html' %}
+  {% block content %}
+
+    <div class="container-fluid">
+        <div class = "row px-5">
+            <h1>Welcome to your feed</h1>
+            <h5>See what your friends have been up to, what others are saying about
+                your favourite recipes, and enjoy reccomendations selected just for you!
+            </h5>
+        </div>
+
+        {% if pages %}
+
+        <div class = "row min-vh-100 g-1">
+          <div class="col-md-4 px-3 py-3">
+
+            {% for item in col1 %}
+                {% if item.type_name == "Recipe" %}
+                    {% include 'partials/feed_recipe_card.html' with recipe=item user=user %}
+                {% else %}
+                    {% include 'partials/feed_review_card.html' with review=item %}
+                {% endif %}
+            {% endfor %}
+
+          </div>
+
+          <div class="col-md-4 px-3 py-3">
+            {% for item in col2 %}
+                {% if item.type_name == "Recipe" %}
+                    {% include 'partials/feed_recipe_card.html' with recipe=item user=user %}
+                {% else %}
+                    {% include 'partials/feed_review_card.html' with review=item %}
+                {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="col-md-4 px-3 py-3">
+            {% for item in col3 %}
+                {% if item.type_name == "Recipe" %}
+                    {% include 'partials/feed_recipe_card.html' with recipe=item user=user %}
+                {% else %}
+                    {% include 'partials/feed_review_card.html' with review=item %}
+                {% endif %}
+            {% endfor %}
+
+          </div>
+        </div>
+    
+
+        {% else %}
+        <div class = "row text-center">
+            <div class="x-auto y-auto">
+            <p class="text-muted ">Browse, review and save recipes to get started.</p>
+            <a href="{% url 'explore' %}" class="btn btn-outline-secondary"> Explore recipes</a>
+        </div>
+
+        </div>
+        
+        {% endif %}
+
+    </div>
+
+  {% endblock %}
+{% endblock %}

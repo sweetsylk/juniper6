@@ -18,10 +18,15 @@ class Recipe(models.Model):
     tags = TaggableManager()
     image = models.ImageField(upload_to='recipe_images/')
     created_at = models.DateTimeField(auto_now_add=True)
+    #created_at = models.DateTimeField()#lets seeder randomise time rather than all being same
     updated_at = models.DateTimeField(auto_now=True)
     saved_by = models.ManyToManyField(User, related_name='saved_recipes', blank=True)
     similar = models.ManyToManyField('self', through='RecipeSimilar', related_name='similars', blank=True, symmetrical=False)
 
+    @property
+    def type_name(self):
+        return self.__class__.__name__
+    
     def __str__(self):
         return self.title
     
@@ -32,10 +37,10 @@ class Recipe(models.Model):
             if not created:
                 rs.update()
 
-    def get_similar(self):
+    def get_similar(self, lim=100):
         s = Recipe.objects.filter(
             models.Q(simsB__recipe_A=self) | models.Q(simsA__recipe_B=self)
-        ).distinct().order_by('-simsA__similarity_score')
+        ).distinct().order_by('-simsA__similarity_score')[:lim]
         return s
     
 
@@ -94,12 +99,6 @@ class RecipeInstruction(models.Model):
         return f"Step {self.step_number}"
     
 
-"""
-whenever a post request is made for review instance, post_save signal sent
-this reciever function checks if rating was positive (>=4), and queries Recipe
-model for 10 other recipes the same user made positive reviews for, and passes
-them to Recipe's add_similar() method
-"""
 @receiver(models.signals.post_save, sender='recipes.RecipeReview')
 def handle_new_review(sender, instance, created, **kwargs):
     if created and int(instance.rating)>=4:
