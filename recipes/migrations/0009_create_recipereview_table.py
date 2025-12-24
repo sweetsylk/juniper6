@@ -11,9 +11,6 @@ class Migration(migrations.Migration):
         ('recipes', '0008_delete_recipeview'),
     ]
 
-    operations = [
-
-
-    ]
+    operations = []
 
 
