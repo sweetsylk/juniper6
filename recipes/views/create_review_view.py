@@ -2,8 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.db.models import Avg
 from django.contrib import messages
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from recipes.models import Recipe, RecipeReview
 from recipes.forms import ReviewForm
 

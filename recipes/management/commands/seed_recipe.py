@@ -1,7 +1,7 @@
 import requests
 from faker import Faker
 from faker_food import FoodProvider
-from random import randint, choices, choice, uniform
+from random import randint, choices, choice, sample
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
 from recipes.models import Recipe, RecipeIngredient, RecipeInstruction, User 
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     Build automation command to seed the recipes database with data.
     """
 
-    RECIPE_COUNT = 500
+    RECIPE_COUNT = 750
     help = 'Seeds the database with sample data'
 
     def __init__(self, *args, **kwargs):
@@ -41,6 +41,7 @@ class Command(BaseCommand):
             print(f"Seeding recipe {recipe_count}/{self.RECIPE_COUNT}", end='\r')
             self.generate_recipe()
             recipe_count = Recipe.objects.count()
+        self.generate_saves()
         print("Recipe seeding complete.      ")
 
     def generate_recipe(self):
@@ -141,6 +142,16 @@ class Command(BaseCommand):
                     amount=ing['amount'],
                     unit=ing['unit']
                 )
+    
+    def generate_saves(self):
+        recipes = list(Recipe.objects.all())
+        users = list(User.objects.all())
+        for  i in range(randint(0, int(len(users)*0.95))):
+            r = choice(recipes)
+            recipes.remove(r)
+            u = sample(users, randint(0, int(len(users)*0.1)))
+            r.saved_by.add(*u)
+            recipes.append(r)
 
 def create_ingredients_list(faker):
     """

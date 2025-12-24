@@ -24,6 +24,8 @@ class RecipeReview(models.Model):
     rating = models.PositiveSmallIntegerField()
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    #created_at = models.DateTimeField() 
+    #comment out this line for seeding so randomise time rather than all being same
 
     class Meta:
         # Prevent duplicate reviews by the same user on same recipe
