@@ -25,6 +25,27 @@ the second option feels like a waste
 home feed should exclude recipes you've already liked and saved?
 
 """
+"""
+Look at people you follow- things they liked should be shown to you too?
+if 2 users follow the same person
+
+    maybe should be a number then- you guys didn't match again for x number of interactions
+    hence remove
+    which parties interactions would guarentee this?
+    okay, relationship should by asymetrical then
+    tbf, i could like a lot of things you like, but you might not like stuff I like
+    so if we are matched, add both directions, and then if A doesnt get B
+    matched to them again after x interactions, then remove row (A, B, x), but not (B, A, y)
+    because B might like stuff A likes, but A doesnt like stuff B likes
+    then get_similars would just:
+    order sim table by (field[0] = B, -field[2])
+    and return all field[1] (if doomscrolling) or first x field[1] if not
+    then we give template the list of user objects
+    it takes first y of their recent saves, and positive reviews
+
+    IF YOU RATED SOMETHING POORLY shout not be recommended to you!
+"""
+
 
 class UserFeedDetailView(LoginRequiredMixin, TemplateView):
     """ 

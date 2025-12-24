@@ -25,34 +25,31 @@ class Recipe(models.Model):
     
     def add_similar(self, recipes):
         for r in recipes:
-            A, B = min(self.pk, r.pk), max(self.pk, r.pk)
-            rs, created = RecipeSimilar.objects.get_or_create(recipe_A_id=A, recipe_B_id=B)            
+            a, b = (r, self) if self.pk > r.pk else (self, r)
+            rs, created = RecipeSimilar.objects.get_or_create(recipe_A=a, recipe_B=b)            
             if not created:
                 rs.similarity_score=models.F('similarity_score') + 1
                 rs.save()
 
     def get_similar(self):
+        #this will only be called by a paginator (?) that splits into groups anyway 
+        #so dont need to limit amount of recipes it return
+        #or, we could limit it if we're not gonna do a sort of doomscroll thing lol
+
         s = Recipe.objects.filter(
-            models.Q(similar_A__recipe_B=self) | models.Q(similar_B__recipe_A=self)
-        ).order_by('-similars__similarity_score')
+            models.Q(simsB__recipe_A=self) | models.Q(simsA__recipe_B=self)
+        ).distinct().order_by('-simsA__similarity_score')
         return s
     
 
 class RecipeSimilar(models.Model):
     """Custom through table for 'similar' field"""
-    recipe_A = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="similar_A")
-    recipe_B = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="similar_B")
-    similarity_score = models.IntegerField(default=0)
-
-    #override save() to normalise ordering for simpler querying
-    #is this even necessary? I normalised before passing in??
-    def save(self, *args, **kwargs):
-        if self.recipe_A.pk > self.recipe_B.pk:
-            self.recipe_A, self.recipe_B = self.recipe_B, self.recipe_A
-        super().save(*args, **kwargs)
+    recipe_A = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="simsA")
+    recipe_B = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="simsB")
+    similarity_score = models.IntegerField(default=1)
 
     class Meta:
-        # if row (A,B,x), do not make another row (A,B,y)
+        # if row (A,B,x), do not allow another row (A,B,y)
         constraints =[
             models.UniqueConstraint(fields=['recipe_A','recipe_B'], name="unique_similar_recipes")
         ]
@@ -98,9 +95,13 @@ them to Recipe's add_similar() method
 """
 @receiver(models.signals.post_save, sender='recipes.RecipeReview')
 def handle_new_review(sender, instance, created, **kwargs):
-    if created and instance.rating>=4:
+    if created and int(instance.rating)>=4:
         similar_recipes = Recipe.objects.filter(
             reviews__user = instance.user,
             reviews__rating__gte = 4 #rating is >= 4
         ).exclude(pk = instance.recipe.pk) 
         instance.recipe.add_similar(similar_recipes)
+
+        #do we get ALL positively rated? seems a little overkill-ish
+        #maybe up to 5 recents? 10? 20?what would be a good number for a 
+        #small site vs a big one?
