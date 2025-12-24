@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.dispatch import receiver
+from django.utils import timezone
+from datetime import timedelta
 from taggit.managers import TaggableManager
 from .user import User
 """
@@ -28,14 +30,9 @@ class Recipe(models.Model):
             a, b = (r, self) if self.pk > r.pk else (self, r)
             rs, created = RecipeSimilar.objects.get_or_create(recipe_A=a, recipe_B=b)            
             if not created:
-                rs.similarity_score=models.F('similarity_score') + 1
-                rs.save()
+                rs.update()
 
     def get_similar(self):
-        #this will only be called by a paginator (?) that splits into groups anyway 
-        #so dont need to limit amount of recipes it return
-        #or, we could limit it if we're not gonna do a sort of doomscroll thing lol
-
         s = Recipe.objects.filter(
             models.Q(simsB__recipe_A=self) | models.Q(simsA__recipe_B=self)
         ).distinct().order_by('-simsA__similarity_score')
@@ -47,12 +44,22 @@ class RecipeSimilar(models.Model):
     recipe_A = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="simsA")
     recipe_B = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="simsB")
     similarity_score = models.IntegerField(default=1)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         # if row (A,B,x), do not allow another row (A,B,y)
         constraints =[
-            models.UniqueConstraint(fields=['recipe_A','recipe_B'], name="unique_similar_recipes")
+            models.UniqueConstraint(fields=['recipe_A','recipe_B'], name="unique_similarities")
         ]
+    
+    def update (self):
+        if self.updated_at <= timezone.now() - timedelta(days=60): 
+            self.delete()
+            return
+        else: 
+            self.similarity_score=models.F('similarity_score') + 1
+            self.save()
+    
 
 
 class RecipeIngredient(models.Model):
@@ -90,7 +97,7 @@ class RecipeInstruction(models.Model):
 """
 whenever a post request is made for review instance, post_save signal sent
 this reciever function checks if rating was positive (>=4), and queries Recipe
-model for x other recipes the same user made positive reviews for, and passes
+model for 10 other recipes the same user made positive reviews for, and passes
 them to Recipe's add_similar() method
 """
 @receiver(models.signals.post_save, sender='recipes.RecipeReview')
@@ -98,10 +105,6 @@ def handle_new_review(sender, instance, created, **kwargs):
     if created and int(instance.rating)>=4:
         similar_recipes = Recipe.objects.filter(
             reviews__user = instance.user,
-            reviews__rating__gte = 4 #rating is >= 4
-        ).exclude(pk = instance.recipe.pk) 
+            reviews__rating__gte = 4
+        ).exclude(pk = instance.recipe.pk).order_by("-created_at")[:10]
         instance.recipe.add_similar(similar_recipes)
-
-        #do we get ALL positively rated? seems a little overkill-ish
-        #maybe up to 5 recents? 10? 20?what would be a good number for a 
-        #small site vs a big one?
