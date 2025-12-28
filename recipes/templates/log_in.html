@@ -9,7 +9,11 @@
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Log in" class="btn btn-primary">
+        <input
+          type="submit"
+          value="Log in"
+          class="btn btn-outline-secondary rounded-pill shadow-sm px-4 mt-3"
+        >
       </form>
     </div>
   </div>

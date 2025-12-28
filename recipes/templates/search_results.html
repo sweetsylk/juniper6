@@ -43,10 +43,16 @@
 
     {% else %}
     <!-- No recipes found -->
-    <p class="text-center mt-4">
-        No recipes, authors, or tags found matching "{{ query }}."
-        <a href="{% url 'explore' %}" class="btn btn-primary btn-sm ms-2">Go back home</a>
-    </p>
+    <div class="text-center mt-4">
+        <p class="mb-3">
+            No recipes, authors, or tags found matching "{{ query }}."
+        </p>
+
+        <a href="{% url 'explore' %}"
+            class="btn btn-outline-secondary rounded-pill shadow-sm px-4">
+            Go Back Home
+        </a>
+    </div>
     {% endif %}
 
 </div>
