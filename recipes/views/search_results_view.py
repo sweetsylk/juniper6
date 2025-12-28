@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from recipes.models import Recipe
 from taggit.models import Tag as TagModel
+from django.db.models import Avg
 
 
 def search_results(request):
@@ -49,7 +50,12 @@ def search_results(request):
                 recipes = Recipe.objects.none()
                 break
 
-        recipes = recipes.distinct().order_by('-created_at')
+        recipes = (
+            recipes
+            .annotate(avg_rating=Avg("reviews__rating"))
+            .distinct()
+            .order_by('-created_at')
+        )
     else:
         recipes = Recipe.objects.none()
 

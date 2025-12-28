@@ -8,7 +8,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('recipes', '0008_delete_recipeview'),
+        ('recipes', '0005_merge_20251224_1317'),
     ]
 
     operations = []

@@ -7,7 +7,11 @@
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Sign up" class="btn btn-primary">
+        <input
+          type="submit"
+          value="Sign up"
+          class="btn btn-outline-secondary rounded-pill shadow-sm px-4 mt-3"
+        >
       </form>
     </div>
   </div>

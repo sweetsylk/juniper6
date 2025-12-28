@@ -69,4 +69,3 @@ class UserFeedDetailView(LoginRequiredMixin, TemplateView):
         context["pages"] = pages
 
         return context
-
