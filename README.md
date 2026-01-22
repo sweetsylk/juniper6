@@ -4,12 +4,7 @@
 
 
 ## Team members
-The members of the team are:
-- Ridwan Adam
-- Fatimah Alabdulmuhsin
-- Mekelle-Angel Owusu-Agyare
-- Adrian Yip
-- Jeremie Ntumba
+
 
 ## Project structure
 The project is called `recipify`.  It currently consists of a single app `recipes`.
